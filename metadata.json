@@ -1,0 +1,7 @@
+{
+  "name": " RDJ no Chile ",
+  "description": "A visually identical recreation of the RDJ no Chile authentication page, built with React and Tailwind CSS.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
