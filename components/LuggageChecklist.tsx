@@ -43,20 +43,20 @@ export const LuggageChecklist: React.FC = () => {
 
   return (
     <div>
-        <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700/50 shrink-0">
+        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-700/50 shrink-0">
             <ProgressBar progress={progress} quote={quote} />
         </div>
-        <div className="space-y-3 p-2 sm:p-3">
+        <div className="space-y-3 p-2 sm:p-4">
         {luggageData.map((category, categoryIndex) => {
             const isOpen = openCategoryIndex === categoryIndex;
             return (
-            <div key={categoryIndex} className="bg-gradient-to-br from-white/60 to-gray-50/60 dark:from-slate-800/60 dark:to-slate-900/50 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-700/80">
+            <div key={categoryIndex} className="bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-200/80 dark:border-slate-700/80">
                 <div
                 className="flex items-center p-4 cursor-pointer"
                 onClick={() => handleToggleCategory(categoryIndex)}
                 >
                 <div className="flex-1">
-                    <h2 className="font-bold text-base text-gray-900 dark:text-gray-100">{category.title}</h2>
+                    <h2 className="font-bold text-base text-slate-900 dark:text-slate-100">{category.title}</h2>
                 </div>
                 <ChevronDownIcon className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
                 </div>
@@ -65,7 +65,7 @@ export const LuggageChecklist: React.FC = () => {
                 >
                     <div className="px-4 pb-4">
                         {category.subcategories.map((sub, subCategoryIndex) => (
-                            <div key={subCategoryIndex} className="pt-3 border-t border-gray-200 dark:border-gray-700/50 first:border-t-0 first:pt-0">
+                            <div key={subCategoryIndex} className="pt-3 border-t border-slate-200 dark:border-slate-700/50 first:border-t-0 first:pt-0">
                                 <h3 className="font-semibold text-sm text-brand-700 dark:text-brand-400 mb-2">{sub.title}</h3>
                                 <ul className="space-y-1">
                                     {sub.items.map((item, itemIndex) => {
@@ -74,11 +74,11 @@ export const LuggageChecklist: React.FC = () => {
                                         return (
                                             <li
                                                 key={itemIndex}
-                                                className={`flex items-center gap-3 cursor-pointer p-1.5 rounded-lg transition-all duration-300 ${isChecked ? 'text-gray-500 line-through dark:text-gray-500' : 'hover:bg-gray-500/5 dark:hover:bg-white/10'}`}
+                                                className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-300 ${isChecked ? 'text-slate-500 line-through dark:text-slate-500' : 'hover:bg-slate-100 dark:hover:bg-slate-700/50'}`}
                                                 onClick={() => handleCheckItem(categoryIndex, subCategoryIndex, itemIndex)}
                                             >
                                                 <div>{isChecked ? <CheckCircleIcon /> : <EmptyCircleIcon />}</div>
-                                                <span className="flex-1 text-sm text-gray-800 dark:text-gray-200">{item.name}</span>
+                                                <span className={`flex-1 text-sm ${isChecked ? 'text-slate-500' : 'text-slate-800 dark:text-slate-200'}`}>{item.name}</span>
                                             </li>
                                         );
                                     })}

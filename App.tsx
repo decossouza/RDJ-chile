@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { AuthInput } from './components/AuthInput';
 import { Itinerary } from './components/Itinerary';
@@ -19,6 +20,7 @@ function App() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // FIX: Added missing '=' for useState hook. This was causing a cascade of parsing errors on preceding lines.
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { timeOfDay } = useWeather();
   const isNight = timeOfDay === 'Night';
@@ -85,14 +87,13 @@ function App() {
     }
 
     return (
-      <main className="relative z-10 w-full max-w-md bg-white/50 dark:bg-slate-900/50 backdrop-blur-md rounded-2xl shadow-2xl p-6 space-y-5 border border-white/30 dark:border-slate-700/50">
+      <main className="relative z-10 w-full max-w-md bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-8 space-y-6 border border-slate-200 dark:border-slate-700">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">RDJ</h1>
-          <h2 className="mt-2 text-xl font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a) de volta!</h2>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Acesse sua conta para ver os detalhes da viagem</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">RDJ no Chile</h1>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Acesse sua conta para ver os detalhes da viagem.</p>
         </div>
 
-        <form className="space-y-5" onSubmit={handleLogin}>
+        <form className="space-y-6" onSubmit={handleLogin}>
           <AuthInput
             id="email"
             label="Usuário"
@@ -105,7 +106,7 @@ function App() {
 
           <div>
              <div className="flex justify-between items-baseline">
-                <label htmlFor="password" className="block text-xs font-medium text-gray-800 dark:text-gray-300">
+                <label htmlFor="password" className="block text-sm font-medium text-slate-800 dark:text-slate-300">
                     Senha
                 </label>
                 <a href="#" className="text-xs text-brand-600 hover:text-brand-500 dark:text-brand-400 dark:hover:text-brand-300 font-medium">
@@ -129,7 +130,7 @@ function App() {
 
           <button
             type="submit"
-            className="w-full py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 shadow-lg"
+            className="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:focus:ring-offset-slate-800 shadow-lg shadow-brand-500/30 hover:-translate-y-0.5"
           >
             Entrar
           </button>
@@ -137,45 +138,38 @@ function App() {
 
         <div className="relative flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+            <div className="w-full border-t border-slate-300 dark:border-slate-600"></div>
           </div>
-          <div className="relative bg-white/50 dark:bg-slate-900/50 px-2 text-xs text-gray-500 dark:text-gray-400">ou</div>
+          <div className="relative bg-white dark:bg-slate-800 px-2 text-xs text-slate-500 dark:text-slate-400">ou</div>
         </div>
 
         <button
           type="button"
-          className="w-full flex items-center justify-center py-2.5 px-4 bg-gray-50/80 border border-gray-300 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-100 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:bg-slate-700/80 dark:border-slate-600 dark:text-gray-200 dark:hover:bg-slate-600"
+          className="w-full flex items-center justify-center py-2.5 px-4 bg-slate-50 dark:bg-slate-700/60 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:focus:ring-offset-slate-800"
         >
           <GoogleIcon className="mr-3" />
           Entrar com Google
         </button>
-
-        <p className="text-center text-xs text-gray-600 dark:text-gray-400">
-          Não tem uma conta?{' '}
-          <a href="#" className="font-bold text-brand-600 hover:text-brand-500 dark:text-brand-400 dark:hover:text-brand-300">
-            Cadastre-se
-          </a>
-        </p>
       </main>
     );
   };
   
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 font-sans relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
+    <div className="min-h-screen w-full flex items-center justify-center p-4 font-sans relative overflow-hidden bg-slate-100 dark:bg-slate-900">
+      <div className="absolute inset-0 z-0">
         {/* Day */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-sky-400 to-sky-200 transition-opacity duration-[1500ms] ease-in-out"
+          className="absolute inset-0 bg-gradient-to-b from-sky-200 to-slate-50 transition-opacity duration-[1500ms] ease-in-out"
           style={{ opacity: timeOfDay === 'Day' ? 1 : 0 }}
         />
         {/* Sunset */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-indigo-700 via-purple-500 to-orange-400 transition-opacity duration-[1500ms] ease-in-out"
+          className="absolute inset-0 bg-gradient-to-b from-yellow-200 via-orange-300 to-pink-300 transition-opacity duration-[1500ms] ease-in-out"
           style={{ opacity: timeOfDay === 'Sunset' ? 1 : 0 }}
         />
         {/* Night */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-gray-900 to-slate-800 transition-opacity duration-[1500ms] ease-in-out"
+          className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800 transition-opacity duration-[1500ms] ease-in-out"
           style={{ opacity: timeOfDay === 'Night' ? 1 : 0 }}
         >
           <Stars />

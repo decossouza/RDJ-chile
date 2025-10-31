@@ -23,20 +23,20 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title = "Informa�
 
   return (
     <div 
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex justify-center items-center p-4 transition-opacity duration-300"
+      className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4 transition-opacity duration-300"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div 
-        className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-white/20 dark:border-gray-700 rounded-2xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0 animate-fade-in-scale"
+        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0 animate-fade-in-scale"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-4 border-b dark:border-gray-700/50 flex justify-between items-center">
-          <h3 className="font-bold text-base text-gray-800 dark:text-gray-200">{title}</h3>
+        <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+          <h3 className="font-bold text-base text-slate-800 dark:text-slate-200">{title}</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1 rounded-full"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition p-1 rounded-full"
             aria-label="Close modal"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -50,16 +50,16 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title = "Informa�
               {isLoading && (
                 <div className="flex justify-center items-center flex-col gap-4 py-8">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
-                  <p className="text-gray-600 dark:text-gray-400">Buscando informações...</p>
+                  <p className="text-slate-600 dark:text-slate-400">Buscando informações...</p>
                 </div>
               )}
               {error && <p className="text-red-500 text-center font-medium">{error}</p>}
               {!isLoading && !error && content && (
                 <div>
-                  <p className="whitespace-pre-wrap text-gray-700 dark:text-gray-300">{content.text}</p>
+                  <p className="whitespace-pre-wrap text-slate-700 dark:text-slate-300">{content.text}</p>
                   {content.links.length > 0 && (
-                    <div className="mt-6 pt-4 border-t dark:border-gray-700/50">
-                      <h4 className="font-semibold mb-2 text-gray-800 dark:text-gray-200">Links úteis:</h4>
+                    <div className="mt-6 pt-4 border-t dark:border-slate-700">
+                      <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200">Links úteis:</h4>
                       <ul className="list-disc list-inside space-y-2">
                         {content.links.map((link, index) => (
                           <li key={index}>

@@ -97,7 +97,7 @@ export const luggageData: ChecklistCategory[] = [
     ],
   },
   {
-    title: 'Joe (5 anos)',
+    title: 'Joe',
     subcategories: [
       {
         title: 'Roupas',

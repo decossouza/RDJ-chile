@@ -14,12 +14,12 @@ export const AuthInput: React.FC<AuthInputProps> = ({ id, label, type, placehold
   return (
     <div>
       {label && (
-        <label htmlFor={id} className="block text-xs font-medium text-gray-800 dark:text-gray-300 mb-1">
+        <label htmlFor={id} className="block text-sm font-medium text-slate-800 dark:text-slate-300 mb-2">
           {label}
         </label>
       )}
       <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
           {icon}
         </div>
         <input
@@ -30,7 +30,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({ id, label, type, placehold
           onChange={onChange}
           placeholder={placeholder}
           autoComplete="off"
-          className="w-full pl-10 pr-3 py-2.5 bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-gray-200 text-sm placeholder:text-gray-500 dark:placeholder:text-gray-400 border border-gray-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-400 focus:border-transparent transition"
+          className="w-full pl-11 pr-3 py-3 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-200 text-sm placeholder:text-slate-500 dark:placeholder:text-slate-400 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 dark:focus:ring-brand-400 focus:border-transparent transition"
         />
       </div>
     </div>

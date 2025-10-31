@@ -154,24 +154,24 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
   else if (progress >= 25) currentQuote = quotes[1];
 
   const renderDayList = () => (
-    <div className="space-y-3 p-2 sm:p-3">
+    <div className="space-y-3 p-2 sm:p-4">
       {itineraryData.map((day, dayIndex) => {
         const isOpen = openDayIndex === dayIndex;
         const DayIcon = day.icon;
         return (
-          <div key={dayIndex} className={`bg-gradient-to-br from-white/60 to-gray-50/60 dark:from-slate-800/60 dark:to-slate-900/50 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-700/80 ${isOpen ? 'border-brand-500/50 ring-2 ring-brand-500/30' : 'border-gray-200'}`}>
+          <div key={dayIndex} className={`bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-200/80 dark:border-slate-700/80 ${isOpen ? 'ring-2 ring-brand-500/50' : ''}`}>
             <div
-              className="flex items-center p-3 cursor-pointer"
+              className="flex items-center p-4 cursor-pointer"
               onClick={() => handleToggleDay(dayIndex)}
               aria-expanded={isOpen}
               aria-controls={`day-${dayIndex}-content`}
               role="button"
             >
-              <div className="mr-4 p-3 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full shadow-lg">
+              <div className="mr-4 p-3 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg shadow-lg shadow-brand-500/30">
                   <DayIcon className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                  <h2 className="font-bold text-base text-gray-900 dark:text-gray-100">{`${day.day} – ${day.date}`}</h2>
+                  <h2 className="font-bold text-base text-slate-900 dark:text-slate-100">{`${day.day} – ${day.date}`}</h2>
                   <h3 className="font-semibold text-sm text-brand-700 dark:text-brand-400">{day.title}</h3>
               </div>
               <ChevronDownIcon className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
@@ -181,24 +181,24 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
               id={`day-${dayIndex}-content`}
               className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px]' : 'max-h-0'}`}
             >
-              <div className="px-3 pb-3">
-                <ul className="space-y-1 border-t border-gray-200 dark:border-gray-700/50 pt-3">
+              <div className="px-4 pb-4">
+                <ul className="space-y-1 border-t border-slate-200 dark:border-slate-700/50 pt-3">
                   {day.events.map((event, eventIndex) => {
                     const key = `${dayIndex}-${eventIndex}`;
                     const isChecked = !!checkedItems[key];
                     return (
                       <li
                         key={eventIndex}
-                        className={`flex items-center gap-2 cursor-pointer p-1.5 rounded-lg transition-all duration-300 group ${isChecked ? 'bg-brand-50 text-gray-500 line-through dark:bg-brand-950/50 dark:text-gray-500' : 'hover:bg-gray-500/5 dark:hover:bg-white/10'}`}
+                        className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-300 group ${isChecked ? 'bg-brand-50 text-slate-500 line-through dark:bg-brand-950/50 dark:text-slate-500' : 'hover:bg-slate-100 dark:hover:bg-slate-700/50'}`}
                         onClick={() => handleCheckItem(dayIndex, eventIndex)}
                       >
                         <div>{isChecked ? <CheckCircleIcon /> : <EmptyCircleIcon />}</div>
-                        <span className={`w-14 text-xs font-semibold ${isChecked ? 'text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>{event.time}</span>
-                        <span className="flex-1 flex justify-between items-center text-sm text-gray-800 dark:text-gray-200">
+                        <span className={`w-14 text-xs font-semibold ${isChecked ? 'text-slate-500' : 'text-slate-700 dark:text-slate-300'}`}>{event.time}</span>
+                        <span className="flex-1 flex justify-between items-center text-sm text-slate-800 dark:text-slate-200">
                           {event.description}
                           <button
                             onClick={(e) => { e.stopPropagation(); handleGetInfo(event.description); }}
-                            className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity ml-2 p-1 rounded-full hover:bg-gray-500/10 dark:hover:bg-white/10"
+                            className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity ml-2 p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700"
                             aria-label={`Get more info about ${event.description}`}
                           >
                             <InfoIcon />
@@ -221,17 +221,17 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
       case 'roteiro':
         return (
           <>
-            <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700/50 shrink-0">
+            <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-700/50 shrink-0">
                 <ProgressBar progress={progress} quote={currentQuote} />
             </div>
-            <div className="flex-1 overflow-y-auto no-scrollbar">
+            <div className="flex-1 overflow-y-auto no-scrollbar bg-slate-50 dark:bg-slate-900/50">
                 {renderDayList()}
             </div>
           </>
         );
       case 'mala':
         return (
-            <div className="flex-1 overflow-y-auto no-scrollbar">
+            <div className="flex-1 overflow-y-auto no-scrollbar bg-slate-50 dark:bg-slate-900/50">
                 <LuggageChecklist />
             </div>
         );
@@ -242,59 +242,67 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
 
   return (
     <>
-      <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white/60 dark:bg-slate-900/60 backdrop-blur-md text-gray-800 dark:text-gray-200 border border-white/30 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
-        <header className="p-4 sm:p-5 border-b border-white/30 dark:border-gray-700/50 flex flex-col items-center gap-4 shrink-0">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-center text-gray-900 dark:text-gray-100">
-            <span>Roteiro Chile 🇨🇱</span>
-          </h1>
-          <div className="w-full flex justify-between items-center">
-            <button
-                onClick={onLogout}
-                className="py-1.5 px-4 bg-white/90 hover:bg-white text-brand-600 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md dark:bg-slate-800 dark:text-gray-200 dark:hover:bg-slate-700"
+      <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden">
+        <header className="relative border-b border-slate-200 dark:border-slate-700 shrink-0">
+            <div 
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1521973199345-31d7e235daa8?q=80&w=1200&auto=format&fit=crop')" }}
             >
-                Sair
-            </button>
-            <div className="flex items-center gap-2 sm:gap-3">
-                <button
-                onClick={handleOpenSantiagoMap}
-                className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 transition-colors"
-                aria-label="Abrir mapa de Santiago"
-                title="Abrir mapa de Santiago"
-                >
-                <MapPinIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                </button>
-                <button
-                onClick={() => setIsEmergencyModalOpen(true)}
-                className="p-2 rounded-full bg-red-500/10 hover:bg-red-500/20 transition-colors"
-                aria-label="Contatos de Emergência"
-                title="Contatos de Emergência"
-                >
-                <AlertTriangleIcon className="w-5 h-5 text-red-600 dark:text-red-500" />
-                </button>
-                <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Toggle dark mode"
-                disabled={isNight}
-                title={isNight ? "Modo escuro ativado automaticamente à noite" : "Alternar modo claro/escuro"}
-                >
-                {isDarkMode ? <SunIcon /> : <MoonIcon />}
-                </button>
+                <div className="absolute inset-0 bg-black/40" />
             </div>
-          </div>
+            <div className="relative p-4 sm:p-5 flex flex-col items-center gap-4">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-center text-white drop-shadow-md">
+                    <span>Roteiro Chile 🇨🇱</span>
+                </h1>
+                <div className="w-full flex justify-between items-center">
+                    <button
+                        onClick={onLogout}
+                        className="py-1.5 px-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-xs font-bold rounded-lg transition-colors duration-300 border border-white/30"
+                    >
+                        Sair
+                    </button>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <button
+                        onClick={handleOpenSantiagoMap}
+                        className="p-2 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-colors text-white"
+                        aria-label="Abrir mapa de Santiago"
+                        title="Abrir mapa de Santiago"
+                        >
+                        <MapPinIcon className="w-5 h-5" />
+                        </button>
+                        <button
+                        onClick={() => setIsEmergencyModalOpen(true)}
+                        className="p-2 rounded-lg bg-red-500/50 hover:bg-red-500/60 backdrop-blur-sm transition-colors text-white"
+                        aria-label="Contatos de Emergência"
+                        title="Contatos de Emergência"
+                        >
+                        <AlertTriangleIcon className="w-5 h-5" />
+                        </button>
+                        <button
+                        onClick={() => setIsDarkMode(!isDarkMode)}
+                        className="p-2 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-colors text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Toggle dark mode"
+                        disabled={isNight}
+                        title={isNight ? "Modo escuro ativado automaticamente à noite" : "Alternar modo claro/escuro"}
+                        >
+                        {isDarkMode ? <SunIcon /> : <MoonIcon />}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <div className="flex border-b border-gray-200 dark:border-gray-700/50 shrink-0">
+        <div className="flex border-b border-slate-200 dark:border-slate-700 shrink-0">
             <button
                 onClick={() => setActiveTab('roteiro')}
-                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'roteiro' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/10' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-500/5'}`}
+                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'roteiro' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/5' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
             >
                 <RoteiroIcon className="w-5 h-5" />
                 Roteiro
             </button>
             <button
                 onClick={() => setActiveTab('mala')}
-                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'mala' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/10' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-500/5'}`}
+                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'mala' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/5' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
             >
                 <BriefcaseIcon className="w-5 h-5" />
                 Mala
@@ -317,13 +325,13 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         onClose={() => setIsEmergencyModalOpen(false)}
         title="Contatos de Emergência"
       >
-        <div className="space-y-2 text-gray-700 dark:text-gray-300 text-xs sm:text-sm">
+        <div className="space-y-2 text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
             <p><strong>Polícia (Carabineros):</strong> <a href="tel:133" className="text-brand-600 dark:text-brand-400 hover:underline">133</a></p>
             <p><strong>Ambulância (SAMU):</strong> <a href="tel:131" className="text-brand-600 dark:text-brand-400 hover:underline">131</a></p>
             <p><strong>Bombeiros:</strong> <a href="tel:132" className="text-brand-600 dark:text-brand-400 hover:underline">132</a></p>
             
-            <div className="pt-3 mt-3 border-t border-gray-200 dark:border-gray-700/50">
-              <h4 className="font-semibold mb-2 text-gray-800 dark:text-gray-200">Consulado-Geral do Brasil em Santiago</h4>
+            <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-700/50">
+              <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200">Consulado-Geral do Brasil em Santiago</h4>
               <p><strong>Endereço:</strong> Los Militares 6191, Térreo, Las Condes, Santiago</p>
               <p><strong>Telefone (horário comercial):</strong> <a href="tel:+56228205800" className="text-brand-600 dark:text-brand-400 hover:underline">+56 2 2820-5800</a></p>
               <div className="mt-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-500/30">
@@ -331,7 +339,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
                   <strong className="text-red-600 dark:text-red-400">Telefone de Plantão (EMERGÊNCIAS):</strong><br/>
                   <a href="tel:+56993345103" className="text-brand-600 dark:text-brand-400 hover:underline font-semibold">+56 9 9334-5103</a>
                 </p>
-                <span className="text-xs block text-gray-500 dark:text-gray-400 mt-1">Somente para emergências graves com cidadãos brasileiros (acidentes, mortes, prisões).</span>
+                <span className="text-xs block text-slate-500 dark:text-slate-400 mt-1">Somente para emergências graves com cidadãos brasileiros (acidentes, mortes, prisões).</span>
               </div>
             </div>
         </div>
