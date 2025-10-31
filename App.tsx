@@ -4,40 +4,30 @@ import { Itinerary } from './components/Itinerary';
 import { MailIcon } from './components/icons/MailIcon';
 import { LockIcon } from './components/icons/LockIcon';
 import { GoogleIcon } from './components/icons/GoogleIcon';
+import { useWeather } from './hooks/useWeather';
+import { DynamicBackground } from './components/DynamicBackground';
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isNight, setIsNight] = useState(false);
+  const { timeOfDay, weather } = useWeather();
+  const isNight = timeOfDay === 'Night';
 
-  // Effect to check time of day and set initial dark mode
   useEffect(() => {
-    const checkTimeAndSetMode = () => {
-      const hour = new Date().getHours();
-      const night = hour < 6 || hour >= 20;
-      setIsNight(night);
-
-      if (night) {
-        setIsDarkMode(true);
-      } else {
-        try {
-          const savedMode = localStorage.getItem('santiagoDarkMode');
-          setIsDarkMode(savedMode ? JSON.parse(savedMode) : false);
-        } catch {
-          setIsDarkMode(false);
-        }
+    if (isNight) {
+      setIsDarkMode(true);
+    } else {
+      try {
+        const savedMode = localStorage.getItem('santiagoDarkMode');
+        setIsDarkMode(savedMode ? JSON.parse(savedMode) : false);
+      } catch {
+        setIsDarkMode(false);
       }
-    };
-
-    checkTimeAndSetMode();
-    const intervalId = setInterval(checkTimeAndSetMode, 60000); // Check every minute
-
-    return () => clearInterval(intervalId);
-  }, []);
+    }
+  }, [timeOfDay]);
   
   // Effect to apply dark mode class and save preference
   useEffect(() => {
@@ -48,7 +38,6 @@ function App() {
       element.classList.remove('dark');
     }
     
-    // Only save manual changes to local storage (i.e., when it's not night)
     if (!isNight) {
         try {
             localStorage.setItem('santiagoDarkMode', JSON.stringify(isDarkMode));
@@ -61,7 +50,7 @@ function App() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === 'Deco' && password === 'Deco') {
+    if ((email === 'Deco' && password === 'Deco') || (email === 'Rafa' && password === 'Rafa')) {
       setIsLoggedIn(true);
       setError('');
     } else {
@@ -88,14 +77,14 @@ function App() {
     }
 
     return (
-      <main className="relative z-10 w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 space-y-6 border border-gray-200 dark:border-slate-700">
+      <main className="relative z-10 w-full max-w-md bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-2xl p-6 space-y-5 border border-white/30 dark:border-slate-700/50">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">RDJ</h1>
-          <h2 className="mt-2 text-2xl font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a) de volta!</h2>
-          <p className="mt-1 text-base text-gray-600 dark:text-gray-400">Acesse sua conta para ver os detalhes da viagem</p>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">RDJ</h1>
+          <h2 className="mt-2 text-xl font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a) de volta!</h2>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Acesse sua conta para ver os detalhes da viagem</p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleLogin}>
+        <form className="space-y-5" onSubmit={handleLogin}>
           <AuthInput
             id="email"
             label="Usuário"
@@ -108,10 +97,10 @@ function App() {
 
           <div>
              <div className="flex justify-between items-baseline">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-800 dark:text-gray-300">
+                <label htmlFor="password" className="block text-xs font-medium text-gray-800 dark:text-gray-300">
                     Senha
                 </label>
-                <a href="#" className="text-sm text-brand-600 hover:text-brand-500 dark:text-brand-400 dark:hover:text-brand-300 font-medium">
+                <a href="#" className="text-xs text-brand-600 hover:text-brand-500 dark:text-brand-400 dark:hover:text-brand-300 font-medium">
                     Esqueceu a senha?
                 </a>
              </div>
@@ -128,11 +117,11 @@ function App() {
              </div>
           </div>
           
-          {error && <p className="text-sm text-red-600 text-center font-medium">{error}</p>}
+          {error && <p className="text-xs text-red-600 text-center font-medium">{error}</p>}
 
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 shadow-lg"
+            className="w-full py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 shadow-lg"
           >
             Entrar
           </button>
@@ -142,18 +131,18 @@ function App() {
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
-          <div className="relative bg-white dark:bg-slate-800 px-2 text-sm text-gray-500 dark:text-gray-400">ou</div>
+          <div className="relative bg-white/60 dark:bg-slate-900/60 px-2 text-xs text-gray-500 dark:text-gray-400">ou</div>
         </div>
 
         <button
           type="button"
-          className="w-full flex items-center justify-center py-3 px-4 bg-gray-50 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-100 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-200 dark:hover:bg-slate-600"
+          className="w-full flex items-center justify-center py-2.5 px-4 bg-gray-50/80 border border-gray-300 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-100 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:bg-slate-700/80 dark:border-slate-600 dark:text-gray-200 dark:hover:bg-slate-600"
         >
           <GoogleIcon className="mr-3" />
           Entrar com Google
         </button>
 
-        <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-center text-xs text-gray-600 dark:text-gray-400">
           Não tem uma conta?{' '}
           <a href="#" className="font-bold text-brand-600 hover:text-brand-500 dark:text-brand-400 dark:hover:text-brand-300">
             Cadastre-se
@@ -164,8 +153,9 @@ function App() {
   };
   
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 font-sans bg-white dark:bg-slate-900">
-      {renderContent()}
+    <div className="min-h-screen w-full flex items-center justify-center p-4 font-sans relative overflow-hidden">
+        <DynamicBackground timeOfDay={timeOfDay} weather={weather} />
+        {renderContent()}
     </div>
   );
 }

@@ -70,7 +70,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({ dayData, isDarkMode 
             map: mapInstance.current,
             suppressMarkers: true,
             polylineOptions: {
-                strokeColor: isDarkMode ? '#818cf8' : '#4f46e5',
+                strokeColor: isDarkMode ? '#38bdf8' : '#0284c7',
                 strokeOpacity: 0.8,
                 strokeWeight: 6,
             },

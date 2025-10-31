@@ -176,25 +176,25 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
   else if (progress >= 25) currentQuote = quotes[1];
 
   const renderDayList = () => (
-    <div className="space-y-4 p-2 sm:p-4">
+    <div className="space-y-3 p-2 sm:p-3">
       {itineraryData.map((day, dayIndex) => {
         const isOpen = openDayIndex === dayIndex;
         const DayIcon = day.icon;
         return (
-          <div key={dayIndex} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-xl shadow-md overflow-hidden transition-all duration-300 border border-gray-200 dark:border-slate-600">
+          <div key={dayIndex} className={`bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-700/80 ${isOpen ? 'border-brand-500/50 ring-2 ring-brand-500/30' : 'border-gray-200'}`}>
             <div
-              className="flex items-center p-4 cursor-pointer"
+              className="flex items-center p-3 cursor-pointer"
               onClick={() => handleToggleDay(dayIndex)}
               aria-expanded={isOpen}
               aria-controls={`day-${dayIndex}-content`}
               role="button"
             >
-              <div className="mr-4 p-3 bg-brand-100/50 dark:bg-brand-900/40 rounded-xl">
-                  <DayIcon className="w-6 h-6 text-brand-600 dark:text-brand-400" />
+              <div className="mr-4 p-3 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full shadow-lg">
+                  <DayIcon className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                  <h2 className="font-bold text-lg">{`${day.day} – ${day.date}`}</h2>
-                  <h3 className="font-semibold text-brand-700 dark:text-brand-400">{day.title}</h3>
+                  <h2 className="font-bold text-base text-gray-900 dark:text-gray-100">{`${day.day} – ${day.date}`}</h2>
+                  <h3 className="font-semibold text-sm text-brand-700 dark:text-brand-400">{day.title}</h3>
               </div>
                <button
                   onClick={(e) => {
@@ -214,20 +214,20 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
               id={`day-${dayIndex}-content`}
               className={`transition-all duration-500 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px]' : 'max-h-0'}`}
             >
-              <div className="px-4 pb-4">
-                <ul className="space-y-1 text-sm border-t border-gray-200 dark:border-gray-700/50 pt-3">
+              <div className="px-3 pb-3">
+                <ul className="space-y-1 border-t border-gray-200 dark:border-gray-700/50 pt-3">
                   {day.events.map((event, eventIndex) => {
                     const key = `${dayIndex}-${eventIndex}`;
                     const isChecked = !!checkedItems[key];
                     return (
                       <li
                         key={eventIndex}
-                        className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-300 group ${isChecked ? 'bg-brand-50 text-gray-500 line-through dark:bg-brand-950/50 dark:text-gray-500' : 'hover:bg-gray-500/5 dark:hover:bg-white/10'}`}
+                        className={`flex items-center gap-2 cursor-pointer p-1.5 rounded-lg transition-all duration-300 group ${isChecked ? 'bg-brand-50 text-gray-500 line-through dark:bg-brand-950/50 dark:text-gray-500' : 'hover:bg-gray-500/5 dark:hover:bg-white/10'}`}
                         onClick={() => handleCheckItem(dayIndex, eventIndex)}
                       >
                         <div>{isChecked ? <CheckCircleIcon /> : <EmptyCircleIcon />}</div>
-                        <span className={`w-14 font-semibold ${isChecked ? 'text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>{event.time}</span>
-                        <span className="flex-1 flex justify-between items-center">
+                        <span className={`w-14 text-xs font-semibold ${isChecked ? 'text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>{event.time}</span>
+                        <span className="flex-1 flex justify-between items-center text-sm text-gray-800 dark:text-gray-200">
                           {event.description}
                           <button
                             onClick={(e) => { e.stopPropagation(); handleGetInfo(event.description); }}
@@ -251,13 +251,13 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
 
   return (
     <>
-      <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white rounded-2xl shadow-2xl text-gray-800 dark:bg-slate-800 dark:text-gray-200 border border-gray-200 dark:border-slate-700">
-        <header className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700/50 flex justify-between items-center shrink-0">
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2"><CalendarIcon className="w-6 h-6" /> Roteiro Chile 🇨🇱</h1>
+      <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl text-gray-800 dark:text-gray-200 border border-white/30 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
+        <header className="p-4 sm:p-5 border-b border-white/30 dark:border-gray-700/50 flex justify-between items-center shrink-0">
+          <h1 className="text-lg font-bold tracking-tight flex items-center gap-2 text-gray-900 dark:text-gray-100"><CalendarIcon className="w-6 h-6" /> Roteiro Chile 🇨🇱</h1>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 rounded-full hover:bg-gray-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Toggle dark mode"
               disabled={isNight}
               title={isNight ? "Modo escuro ativado automaticamente à noite" : "Alternar modo claro/escuro"}
@@ -266,7 +266,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
             </button>
             <button
               onClick={onLogout}
-              className="py-2 px-4 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md"
+              className="py-1.5 px-3 bg-white/90 hover:bg-white text-brand-600 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md"
             >
               Sair
             </button>
@@ -274,14 +274,15 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         </header>
 
         
-        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700/50 shrink-0">
+        <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700/50 shrink-0">
             <ProgressBar progress={progress} quote={currentQuote} />
         </div>
         <div className="flex-1 overflow-y-auto no-scrollbar">
             {renderDayList()}
         </div>
         
-        <footer className="p-3 border-t border-gray-200 dark:border-gray-700/50 flex justify-around items-center shrink-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+        <footer className="p-2 border-t border-white/30 dark:border-gray-700/50 flex justify-around items-center shrink-0 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm relative">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-500/50 to-transparent"></div>
           <button
             onClick={() => { if (openDayIndex !== null) handleOpenMapForDay(openDayIndex); }}
             disabled={openDayIndex === null}
@@ -315,12 +316,12 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         onClose={() => setIsEmergencyModalOpen(false)}
         title="Contatos de Emergência"
       >
-        <div className="space-y-3 text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+        <div className="space-y-2 text-gray-700 dark:text-gray-300 text-xs sm:text-sm">
             <p><strong>Polícia (Carabineros):</strong> <a href="tel:133" className="text-brand-600 dark:text-brand-400 hover:underline">133</a></p>
             <p><strong>Ambulância (SAMU):</strong> <a href="tel:131" className="text-brand-600 dark:text-brand-400 hover:underline">131</a></p>
             <p><strong>Bombeiros:</strong> <a href="tel:132" className="text-brand-600 dark:text-brand-400 hover:underline">132</a></p>
             
-            <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700/50">
+            <div className="pt-3 mt-3 border-t border-gray-200 dark:border-gray-700/50">
               <h4 className="font-semibold mb-2 text-gray-800 dark:text-gray-200">Consulado-Geral do Brasil em Santiago</h4>
               <p><strong>Endereço:</strong> Los Militares 6191, Térreo, Las Condes, Santiago</p>
               <p><strong>Telefone (horário comercial):</strong> <a href="tel:+56228205800" className="text-brand-600 dark:text-brand-400 hover:underline">+56 2 2820-5800</a></p>

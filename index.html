@@ -19,17 +19,17 @@
             },
             colors: {
               brand: {
-                '50': '#eef2ff',
-                '100': '#e0e7ff',
-                '200': '#c7d2fe',
-                '300': '#a5b4fc',
-                '400': '#818cf8',
-                '500': '#6366f1',
-                '600': '#4f46e5',
-                '700': '#4338ca',
-                '800': '#3730a3',
-                '900': '#312e81',
-                '950': '#1e1b4b'
+                '50': '#f0f9ff',
+                '100': '#e0f2fe',
+                '200': '#bae6fd',
+                '300': '#7dd3fc',
+                '400': '#38bdf8',
+                '500': '#0ea5e9',
+                '600': '#0284c7',
+                '700': '#0369a1',
+                '800': '#075985',
+                '900': '#0c4a6e',
+                '950': '#082f49'
               }
             }
           }
@@ -54,6 +54,124 @@
       .no-scrollbar {
           -ms-overflow-style: none;  /* IE and Edge */
           scrollbar-width: none;  /* Firefox */
+      }
+      
+      /* Dynamic Background Styles */
+      .dynamic-background {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+      }
+      .bg-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: opacity 1.5s ease-in-out;
+      }
+      .bg-day { background: linear-gradient(to bottom, #87CEEB, #d3d3d3); }
+      .bg-sunset { background: linear-gradient(to bottom, #ff7e5f, #feb47b, #ff6a6a); }
+      .bg-night { background: linear-gradient(to bottom, #0f172a, #334155); }
+
+      .weather-overlay {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transition: opacity 1.5s ease-in-out;
+        opacity: 0;
+      }
+
+      /* Sun Glow */
+      .sun-glow {
+        position: absolute;
+        top: 10%;
+        left: 20%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255,255,224,0.5) 0%, rgba(255,255,224,0) 70%);
+      }
+
+      /* Clouds */
+      @keyframes moveClouds {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+      }
+      .clouds-container { position: absolute; inset: 0; overflow: hidden; }
+      .cloud-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        background-repeat: repeat-x;
+        opacity: 0.5;
+        animation: moveClouds linear infinite;
+      }
+      .layer1 {
+        background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/clouds_01.png');
+        animation-duration: 90s;
+      }
+      .layer2 {
+        background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/clouds_02.png');
+        animation-duration: 60s;
+        opacity: 0.3;
+      }
+
+      /* Stars */
+      @keyframes animStar {
+          from {transform: translateY(0px);}
+          to {transform: translateY(-2000px);}
+      }
+      .stars-container { position: absolute; inset: 0; }
+      #stars, #stars2, #stars3 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png') repeat top center;
+        z-index: 0;
+      }
+      #stars2 { background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/twinkling.png'); animation: animStar 100s linear infinite; }
+      #stars3 { background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/twinkling.png'); animation: animStar 150s linear infinite; }
+
+      /* Rain */
+      @keyframes rain {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100vh); }
+      }
+      .rain-container { position: absolute; inset: 0; overflow: hidden; }
+      .rain-drop {
+        position: absolute;
+        width: 2px;
+        height: 20px;
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.4));
+        animation: rain linear infinite;
+      }
+      
+      /* Snow */
+      @keyframes fall {
+        0% { transform: translateY(-100%) rotate(0deg); }
+        100% { transform: translateY(100vh) rotate(360deg); }
+      }
+      .snow-container { position: absolute; inset: 0; overflow: hidden; }
+      .snowflake {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: white;
+        border-radius: 50%;
+        animation: fall linear infinite;
+        pointer-events: none;
       }
     </style>
     <script type="importmap">

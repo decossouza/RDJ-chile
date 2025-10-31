@@ -33,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title = "Informa√
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 border-b dark:border-gray-700/50 flex justify-between items-center">
-          <h3 className="font-bold text-lg text-gray-800 dark:text-gray-200">{title}</h3>
+          <h3 className="font-bold text-base text-gray-800 dark:text-gray-200">{title}</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1 rounded-full"
@@ -44,7 +44,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title = "Informa√
             </svg>
           </button>
         </div>
-        <div className="p-6 overflow-y-auto">
+        <div className="p-6 overflow-y-auto text-sm">
           {children ?? (
             <>
               {isLoading && (
