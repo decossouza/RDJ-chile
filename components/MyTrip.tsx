@@ -39,19 +39,36 @@ const ItemForm: React.FC<{
     const [file, setFile] = useState<File | null>(null);
     const [existingFile, setExistingFile] = useState({ name: item?.fileName, type: item?.fileType, data: item?.fileData });
 
+    const handleRemoveFile = () => {
+        setFile(null);
+        setExistingFile({ name: undefined, type: undefined, data: undefined });
+        const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+        if (fileInput) {
+            fileInput.value = '';
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        let filePayload: Partial<TripItem> = {
-            fileName: existingFile.name,
-            fileType: existingFile.type,
-            fileData: existingFile.data,
-        };
+        let filePayload: Partial<TripItem> = {};
 
         if (file) {
             filePayload = {
                 fileName: file.name,
                 fileType: file.type,
                 fileData: await fileToBase64(file),
+            };
+        } else if (existingFile.name && existingFile.data) {
+             filePayload = {
+                fileName: existingFile.name,
+                fileType: existingFile.type,
+                fileData: existingFile.data,
+            };
+        } else {
+             filePayload = {
+                fileName: undefined,
+                fileType: undefined,
+                fileData: undefined,
             };
         }
         
@@ -65,18 +82,27 @@ const ItemForm: React.FC<{
         onClose();
     };
 
+    const hasAttachment = file || existingFile.name;
+
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <input type="text" placeholder="Título" value={title} onChange={e => setTitle(e.target.value)} required className="w-full p-2 bg-gray-100 dark:bg-slate-700 rounded-md border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 outline-none" />
             <textarea placeholder="Descrição" value={description} onChange={e => setDescription(e.target.value)} className="w-full p-2 bg-gray-100 dark:bg-slate-700 rounded-md border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 outline-none" />
             <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full p-2 bg-gray-100 dark:bg-slate-700 rounded-md border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 outline-none" />
             
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <PaperclipIcon className="w-5 h-5" />
-                <label htmlFor="file-upload" className="cursor-pointer text-brand-600 dark:text-brand-400 hover:underline">
-                    {file ? file.name : (existingFile.name || "Anexar arquivo")}
-                </label>
-                <input id="file-upload" type="file" onChange={e => setFile(e.target.files?.[0] || null)} className="hidden" />
+            <div className="flex items-center justify-between gap-2 text-sm text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-slate-700/50 p-2 rounded-md">
+                <div className="flex items-center gap-2 truncate">
+                    <PaperclipIcon className="w-5 h-5 flex-shrink-0" />
+                    <label htmlFor="file-upload" className="cursor-pointer text-brand-600 dark:text-brand-400 hover:underline truncate">
+                         {file ? file.name : (existingFile.name || "Anexar arquivo")}
+                    </label>
+                    <input id="file-upload" type="file" onChange={e => setFile(e.target.files?.[0] || null)} className="hidden" />
+                </div>
+                {hasAttachment && (
+                    <button type="button" onClick={handleRemoveFile} className="p-1 rounded-full hover:bg-red-500/10 flex-shrink-0" title="Remover anexo">
+                        <TrashIcon className="w-4 h-4 text-red-500" />
+                    </button>
+                )}
             </div>
 
             <div className="flex justify-end gap-3 pt-4">

@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
+import { getAllItems, addItemDB, updateItemDB, deleteItemDB } from '../utils/db';
 
 export type Category = 'documentos' | 'reservas' | 'ingressos' | 'contatos';
 
@@ -13,51 +14,57 @@ export interface TripItem {
   fileType?: string;
 }
 
-const STORAGE_KEY = 'santiagoTripItems';
-
 export const useTripItems = () => {
   const [items, setItems] = useState<TripItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const storedItems = localStorage.getItem(STORAGE_KEY);
-      if (storedItems) {
-        setItems(JSON.parse(storedItems));
-      }
-    } catch (error) {
-      console.error("Failed to load trip items from localStorage", error);
-    } finally {
-      setIsLoading(false);
-    }
+    const loadItems = async () => {
+        try {
+            const storedItems = await getAllItems();
+            setItems(storedItems);
+        } catch (error) {
+            console.error("Failed to load trip items from IndexedDB", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    loadItems();
   }, []);
 
-  const saveItems = useCallback((newItems: TripItem[]) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newItems));
-      setItems(newItems);
-    } catch (error) {
-      console.error("Failed to save trip items to localStorage", error);
-      // Potentially show an error to the user if storage is full
-    }
-  }, []);
-
-  const addItem = (item: Omit<TripItem, 'id'>) => {
+  const addItem = async (item: Omit<TripItem, 'id'>) => {
     const newItem = { ...item, id: Date.now().toString() };
-    const updatedItems = [...items, newItem];
-    saveItems(updatedItems);
+    try {
+        await addItemDB(newItem);
+        setItems(prevItems => [...prevItems, newItem]);
+    } catch (error) {
+        console.error("Failed to save trip item to IndexedDB", error);
+    }
   };
 
-  const updateItem = (id: string, updatedFields: Partial<Omit<TripItem, 'id'>>) => {
-    const updatedItems = items.map(item =>
-      item.id === id ? { ...item, ...updatedFields } : item
-    );
-    saveItems(updatedItems);
+  const updateItem = async (id: string, updatedFields: Partial<Omit<TripItem, 'id'>>) => {
+    const itemToUpdate = items.find(item => item.id === id);
+    if (!itemToUpdate) return;
+    
+    const updatedItem = { ...itemToUpdate, ...updatedFields };
+
+    try {
+        await updateItemDB(updatedItem);
+        setItems(prevItems => prevItems.map(item =>
+          item.id === id ? updatedItem : item
+        ));
+    } catch (error) {
+        console.error("Failed to update trip item in IndexedDB", error);
+    }
   };
 
-  const deleteItem = (id: string) => {
-    const updatedItems = items.filter(item => item.id !== id);
-    saveItems(updatedItems);
+  const deleteItem = async (id: string) => {
+    try {
+        await deleteItemDB(id);
+        setItems(prevItems => prevItems.filter(item => item.id !== id));
+    } catch (error) {
+        console.error("Failed to delete trip item from IndexedDB", error);
+    }
   };
   
   const getItemsByCategory = (category: Category) => {

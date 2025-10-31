@@ -14,8 +14,6 @@ import { CalendarIcon } from './icons/CalendarIcon';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
 import { MapComponent } from './MapComponent';
 import { RoteiroIcon } from './icons/RoteiroIcon';
-import { BriefcaseIcon } from './icons/BriefcaseIcon';
-import { MyTrip } from './MyTrip';
 
 interface ItineraryProps {
   onLogout: () => void;
@@ -39,14 +37,11 @@ interface ModalState {
   error: string;
 }
 
-type ActiveTab = 'roteiro' | 'my-trip';
-
 export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setIsDarkMode, isNight }) => {
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [openDayIndex, setOpenDayIndex] = useState<number | null>(0);
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
   const [isMapView, setIsMapView] = useState(false);
-  const [activeTab, setActiveTab] = useState<ActiveTab>('roteiro');
   
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -65,13 +60,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
       console.error("Failed to parse progress from localStorage", error);
     }
   }, []);
-
-  useEffect(() => {
-    if (activeTab !== 'roteiro') {
-      setIsMapView(false);
-    }
-  }, [activeTab]);
-
 
   const handleToggleDay = (index: number) => {
     setOpenDayIndex(openDayIndex === index ? null : index);
@@ -235,37 +223,10 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
   );
   
   const renderContent = () => {
-    if (activeTab === 'my-trip') {
-      return <MyTrip />;
-    }
-    
     if (isMapView && openDayIndex !== null) {
       return <MapComponent dayData={itineraryData[openDayIndex]} isDarkMode={isDarkMode} />;
     }
-
     return renderDayList();
-  };
-
-  const getHeaderIcon = () => {
-    switch (activeTab) {
-      case 'roteiro':
-        return <CalendarIcon className="w-6 h-6" />;
-      case 'my-trip':
-        return <BriefcaseIcon className="w-6 h-6" />;
-      default:
-        return null;
-    }
-  };
-
-  const getHeaderTitle = () => {
-    switch (activeTab) {
-      case 'roteiro':
-        return 'Roteiro Chile 🇨🇱';
-      case 'my-trip':
-        return 'Minha Viagem';
-      default:
-        return '';
-    }
   };
 
   return (
@@ -273,20 +234,28 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
       <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl text-gray-800 dark:text-gray-200 border border-white/30 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
         <header className="p-4 sm:p-5 border-b border-white/30 dark:border-gray-700/50 flex justify-between items-center shrink-0">
           <h1 className="text-lg font-bold tracking-tight flex items-center gap-2 text-gray-900 dark:text-gray-100">
-            {getHeaderIcon()} {getHeaderTitle()}
+            <CalendarIcon className="w-6 h-6" /> Roteiro Chile 🇨🇱
           </h1>
-          <div className="flex items-center gap-3">
-            {activeTab === 'roteiro' && openDayIndex !== null && (
+          <div className="flex items-center gap-2 sm:gap-3">
+            {isMapView && (
                <button
-                onClick={() => setIsMapView(!isMapView)}
-                disabled={openDayIndex === null}
-                className="flex items-center gap-1.5 py-1.5 px-3 bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-brand-600 dark:text-brand-400 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                title={isMapView ? "Ver lista de atividades" : "Ver rota no mapa"}
+                onClick={() => setIsMapView(false)}
+                className="flex items-center gap-1.5 py-1.5 px-3 bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-brand-600 dark:text-brand-400 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md"
+                title="Ver lista de atividades"
               >
-                <MapPinIcon className="w-4 h-4" />
-                <span>{isMapView ? "Ver Lista" : "Ver Rota"}</span>
+                <RoteiroIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Ver Lista</span>
               </button>
             )}
+            
+            <button
+              onClick={() => setIsEmergencyModalOpen(true)}
+              className="p-2 rounded-full bg-red-500/10 hover:bg-red-500/20 transition-colors"
+              aria-label="Contatos de Emergência"
+              title="Contatos de Emergência"
+            >
+              <AlertTriangleIcon className="w-5 h-5 text-red-600 dark:text-red-500" />
+            </button>
 
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
@@ -313,37 +282,8 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         <div className="flex-1 overflow-y-auto no-scrollbar">
             {renderContent()}
         </div>
-        
-        <footer className="p-2 border-t border-white/30 dark:border-gray-700/50 flex justify-around items-center shrink-0 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm relative">
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-500/50 to-transparent"></div>
-          
-          <button
-            onClick={() => setActiveTab('roteiro')}
-            className={`flex flex-col items-center gap-1 transition-colors w-24 p-2 rounded-lg ${activeTab === 'roteiro' ? 'text-brand-600 dark:text-brand-400 bg-brand-500/10' : 'text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400'}`}
-          >
-            <RoteiroIcon className="w-6 h-6" />
-            <span className="text-xs font-semibold">Roteiro</span>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab('my-trip')}
-            className={`flex flex-col items-center gap-1 transition-colors w-24 p-2 rounded-lg ${activeTab === 'my-trip' ? 'text-brand-600 dark:text-brand-400 bg-brand-500/10' : 'text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400'}`}
-          >
-            <BriefcaseIcon className="w-6 h-6" />
-            <span className="text-xs font-semibold">Minha Viagem</span>
-          </button>
-
-          <button
-            onClick={() => setIsEmergencyModalOpen(true)}
-            className="flex flex-col items-center gap-1 text-red-600 dark:text-red-500 hover:bg-red-500/10 rounded-lg p-2 transition-colors w-24"
-            aria-label="Contatos de Emergência"
-            title="Contatos de Emergência"
-          >
-            <AlertTriangleIcon className="w-6 h-6" />
-            <span className="text-xs font-semibold">Emergência</span>
-          </button>
-        </footer>
       </main>
+      
       <Modal
         isOpen={modalState.isOpen}
         onClose={() => setModalState({ ...modalState, isOpen: false })}
