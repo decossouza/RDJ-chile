@@ -245,10 +245,9 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
       <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden">
         <header className="relative border-b border-slate-200 dark:border-slate-700 shrink-0">
             <div 
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1521973199345-31d7e235daa8?q=80&w=1200&auto=format&fit=crop')" }}
+                className="absolute inset-0 bg-gradient-to-br from-brand-600 to-sky-700"
             >
-                <div className="absolute inset-0 bg-black/40" />
+                <div className="absolute inset-0 bg-black/20" />
             </div>
             <div className="relative p-4 sm:p-5 flex flex-col items-center gap-4">
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-center text-white drop-shadow-md">
