@@ -12,6 +12,10 @@ import { MapPinIcon } from './icons/MapPinIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
+import { MapComponent } from './MapComponent';
+import { RoteiroIcon } from './icons/RoteiroIcon';
+import { BriefcaseIcon } from './icons/BriefcaseIcon';
+import { MyTrip } from './MyTrip';
 
 interface ItineraryProps {
   onLogout: () => void;
@@ -35,10 +39,14 @@ interface ModalState {
   error: string;
 }
 
+type ActiveTab = 'roteiro' | 'my-trip';
+
 export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setIsDarkMode, isNight }) => {
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [openDayIndex, setOpenDayIndex] = useState<number | null>(0);
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
+  const [isMapView, setIsMapView] = useState(false);
+  const [activeTab, setActiveTab] = useState<ActiveTab>('roteiro');
   
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -58,8 +66,16 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
     }
   }, []);
 
+  useEffect(() => {
+    if (activeTab !== 'roteiro') {
+      setIsMapView(false);
+    }
+  }, [activeTab]);
+
+
   const handleToggleDay = (index: number) => {
     setOpenDayIndex(openDayIndex === index ? null : index);
+    if (isMapView) setIsMapView(false);
   };
 
   const handleCheckItem = (dayIndex: number, eventIndex: number) => {
@@ -68,38 +84,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
     setCheckedItems(newCheckedItems);
     localStorage.setItem('santiagoItineraryProgress', JSON.stringify(newCheckedItems));
   };
-
-  const handleOpenMapForDay = (dayIndex: number) => {
-    const day = itineraryData[dayIndex];
-    const locations = day.events
-      .map(event => event.location)
-      .filter((loc): loc is { lat: number; lng: number } => loc !== undefined);
-
-    if (locations.length < 1) {
-      alert("Nenhum local com coordenadas para este dia.");
-      return;
-    }
-
-    const baseUrl = 'https://www.google.com/maps/dir/?api=1';
-    
-    // If there's only one location, just direct to it.
-    if (locations.length === 1) {
-        const destination = `&destination=${locations[0].lat},${locations[0].lng}`;
-        const url = `${baseUrl}${destination}`;
-        window.open(url, '_blank', 'noopener,noreferrer');
-        return;
-    }
-
-    const origin = `&origin=${locations[0].lat},${locations[0].lng}`;
-    const destination = `&destination=${locations[locations.length - 1].lat},${locations[locations.length - 1].lng}`;
-    
-    const waypoints = locations.slice(1, -1).map(loc => `${loc.lat},${loc.lng}`).join('|');
-    const waypointsParam = waypoints ? `&waypoints=${waypoints}` : '';
-
-    const url = `${baseUrl}${origin}${destination}${waypointsParam}&travelmode=driving`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
 
   const handleGetInfo = async (description: string) => {
     setModalState({ isOpen: true, isLoading: true, content: { text: '', links: [] }, error: '' });
@@ -199,7 +183,8 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
                <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleOpenMapForDay(dayIndex);
+                    setOpenDayIndex(dayIndex);
+                    setIsMapView(true);
                   }}
                   className="p-2 rounded-full hover:bg-gray-500/10 transition-colors mr-2"
                   aria-label={`Abrir mapa para ${day.title}`}
@@ -248,13 +233,61 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
       })}
     </div>
   );
+  
+  const renderContent = () => {
+    if (activeTab === 'my-trip') {
+      return <MyTrip />;
+    }
+    
+    if (isMapView && openDayIndex !== null) {
+      return <MapComponent dayData={itineraryData[openDayIndex]} isDarkMode={isDarkMode} />;
+    }
+
+    return renderDayList();
+  };
+
+  const getHeaderIcon = () => {
+    switch (activeTab) {
+      case 'roteiro':
+        return <CalendarIcon className="w-6 h-6" />;
+      case 'my-trip':
+        return <BriefcaseIcon className="w-6 h-6" />;
+      default:
+        return null;
+    }
+  };
+
+  const getHeaderTitle = () => {
+    switch (activeTab) {
+      case 'roteiro':
+        return 'Roteiro Chile 🇨🇱';
+      case 'my-trip':
+        return 'Minha Viagem';
+      default:
+        return '';
+    }
+  };
 
   return (
     <>
       <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl text-gray-800 dark:text-gray-200 border border-white/30 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
         <header className="p-4 sm:p-5 border-b border-white/30 dark:border-gray-700/50 flex justify-between items-center shrink-0">
-          <h1 className="text-lg font-bold tracking-tight flex items-center gap-2 text-gray-900 dark:text-gray-100"><CalendarIcon className="w-6 h-6" /> Roteiro Chile 🇨🇱</h1>
+          <h1 className="text-lg font-bold tracking-tight flex items-center gap-2 text-gray-900 dark:text-gray-100">
+            {getHeaderIcon()} {getHeaderTitle()}
+          </h1>
           <div className="flex items-center gap-3">
+            {activeTab === 'roteiro' && openDayIndex !== null && (
+               <button
+                onClick={() => setIsMapView(!isMapView)}
+                disabled={openDayIndex === null}
+                className="flex items-center gap-1.5 py-1.5 px-3 bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-brand-600 dark:text-brand-400 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                title={isMapView ? "Ver lista de atividades" : "Ver rota no mapa"}
+              >
+                <MapPinIcon className="w-4 h-4" />
+                <span>{isMapView ? "Ver Lista" : "Ver Rota"}</span>
+              </button>
+            )}
+
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -278,19 +311,26 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
             <ProgressBar progress={progress} quote={currentQuote} />
         </div>
         <div className="flex-1 overflow-y-auto no-scrollbar">
-            {renderDayList()}
+            {renderContent()}
         </div>
         
         <footer className="p-2 border-t border-white/30 dark:border-gray-700/50 flex justify-around items-center shrink-0 bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm relative">
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-500/50 to-transparent"></div>
+          
           <button
-            onClick={() => { if (openDayIndex !== null) handleOpenMapForDay(openDayIndex); }}
-            disabled={openDayIndex === null}
-            className="flex flex-col items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-24"
-            title={openDayIndex === null ? "Expanda um dia para ver a rota" : "Abrir rota do dia no mapa"}
+            onClick={() => setActiveTab('roteiro')}
+            className={`flex flex-col items-center gap-1 transition-colors w-24 p-2 rounded-lg ${activeTab === 'roteiro' ? 'text-brand-600 dark:text-brand-400 bg-brand-500/10' : 'text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400'}`}
           >
-            <MapPinIcon className="w-6 h-6" />
-            <span className="text-xs font-semibold">Ver Rota</span>
+            <RoteiroIcon className="w-6 h-6" />
+            <span className="text-xs font-semibold">Roteiro</span>
+          </button>
+          
+          <button
+            onClick={() => setActiveTab('my-trip')}
+            className={`flex flex-col items-center gap-1 transition-colors w-24 p-2 rounded-lg ${activeTab === 'my-trip' ? 'text-brand-600 dark:text-brand-400 bg-brand-500/10' : 'text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400'}`}
+          >
+            <BriefcaseIcon className="w-6 h-6" />
+            <span className="text-xs font-semibold">Minha Viagem</span>
           </button>
 
           <button

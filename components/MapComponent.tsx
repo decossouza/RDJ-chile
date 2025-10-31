@@ -204,7 +204,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({ dayData, isDarkMode 
         )}
         <button
             onClick={handleRecenter}
-            className="absolute bottom-6 right-24 w-14 h-14 bg-brand-500/30 dark:bg-brand-500/30 backdrop-blur-lg border border-white/20 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-brand-500/50 dark:hover:bg-brand-400/50 hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out"
+            className="absolute bottom-6 right-6 w-14 h-14 bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border border-white/20 dark:border-slate-700/50 rounded-full flex items-center justify-center text-gray-700 dark:text-gray-300 shadow-lg hover:bg-white dark:hover:bg-slate-700 hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out"
             aria-label="Centralizar no Roteiro"
             title="Centralizar no Roteiro"
         >
