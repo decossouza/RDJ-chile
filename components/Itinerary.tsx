@@ -12,8 +12,6 @@ import { MapPinIcon } from './icons/MapPinIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
-import { MapComponent } from './MapComponent';
-import { RoteiroIcon } from './icons/RoteiroIcon';
 
 interface ItineraryProps {
   onLogout: () => void;
@@ -41,7 +39,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [openDayIndex, setOpenDayIndex] = useState<number | null>(0);
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
-  const [isMapView, setIsMapView] = useState(false);
   
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -63,7 +60,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
 
   const handleToggleDay = (index: number) => {
     setOpenDayIndex(openDayIndex === index ? null : index);
-    if (isMapView) setIsMapView(false);
   };
 
   const handleCheckItem = (dayIndex: number, eventIndex: number) => {
@@ -71,6 +67,11 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
     const newCheckedItems = { ...checkedItems, [key]: !checkedItems[key] };
     setCheckedItems(newCheckedItems);
     localStorage.setItem('santiagoItineraryProgress', JSON.stringify(newCheckedItems));
+  };
+  
+  const handleOpenSantiagoMap = () => {
+    const url = `https://www.google.com/maps/search/?api=1&query=Santiago,Chile`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleGetInfo = async (description: string) => {
@@ -168,18 +169,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
                   <h2 className="font-bold text-base text-gray-900 dark:text-gray-100">{`${day.day} – ${day.date}`}</h2>
                   <h3 className="font-semibold text-sm text-brand-700 dark:text-brand-400">{day.title}</h3>
               </div>
-               <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenDayIndex(dayIndex);
-                    setIsMapView(true);
-                  }}
-                  className="p-2 rounded-full hover:bg-gray-500/10 transition-colors mr-2"
-                  aria-label={`Abrir mapa para ${day.title}`}
-                  title={`Abrir mapa para ${day.title}`}
-                >
-                  <MapPinIcon className="h-6 w-6 text-gray-500 dark:text-gray-400" />
-                </button>
               <ChevronDownIcon className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
             </div>
 
@@ -221,13 +210,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
       })}
     </div>
   );
-  
-  const renderContent = () => {
-    if (isMapView && openDayIndex !== null) {
-      return <MapComponent dayData={itineraryData[openDayIndex]} isDarkMode={isDarkMode} />;
-    }
-    return renderDayList();
-  };
 
   return (
     <>
@@ -237,17 +219,14 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
             <CalendarIcon className="w-6 h-6" /> Roteiro Chile 🇨🇱
           </h1>
           <div className="flex items-center gap-2 sm:gap-3">
-            {isMapView && (
-               <button
-                onClick={() => setIsMapView(false)}
-                className="flex items-center gap-1.5 py-1.5 px-3 bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-brand-600 dark:text-brand-400 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md"
-                title="Ver lista de atividades"
-              >
-                <RoteiroIcon className="w-4 h-4" />
-                <span className="hidden sm:inline">Ver Lista</span>
-              </button>
-            )}
-            
+             <button
+              onClick={handleOpenSantiagoMap}
+              className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 transition-colors"
+              aria-label="Abrir mapa de Santiago"
+              title="Abrir mapa de Santiago"
+            >
+              <MapPinIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            </button>
             <button
               onClick={() => setIsEmergencyModalOpen(true)}
               className="p-2 rounded-full bg-red-500/10 hover:bg-red-500/20 transition-colors"
@@ -256,7 +235,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
             >
               <AlertTriangleIcon className="w-5 h-5 text-red-600 dark:text-red-500" />
             </button>
-
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -280,7 +258,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
             <ProgressBar progress={progress} quote={currentQuote} />
         </div>
         <div className="flex-1 overflow-y-auto no-scrollbar">
-            {renderContent()}
+            {renderDayList()}
         </div>
       </main>
       
