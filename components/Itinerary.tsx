@@ -3,6 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { itineraryData } from '../data/itineraryData';
 import { ProgressBar } from './ProgressBar';
 import { Modal } from './Modal';
+import { LuggageChecklist } from './LuggageChecklist';
 import { CheckCircleIcon } from './icons/CheckCircleIcon';
 import { EmptyCircleIcon } from './icons/EmptyCircleIcon';
 import { SunIcon } from './icons/SunIcon';
@@ -10,7 +11,8 @@ import { MoonIcon } from './icons/MoonIcon';
 import { InfoIcon } from './icons/InfoIcon';
 import { MapPinIcon } from './icons/MapPinIcon';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
-import { CalendarIcon } from './icons/CalendarIcon';
+import { RoteiroIcon } from './icons/RoteiroIcon';
+import { BriefcaseIcon } from './icons/BriefcaseIcon';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
 
 interface ItineraryProps {
@@ -19,6 +21,8 @@ interface ItineraryProps {
   setIsDarkMode: (value: boolean) => void;
   isNight: boolean;
 }
+
+type ActiveTab = 'roteiro' | 'mala';
 
 interface Link {
   uri: string;
@@ -39,6 +43,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [openDayIndex, setOpenDayIndex] = useState<number | null>(0);
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<ActiveTab>('roteiro');
   
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -154,7 +159,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         const isOpen = openDayIndex === dayIndex;
         const DayIcon = day.icon;
         return (
-          <div key={dayIndex} className={`bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-700/80 ${isOpen ? 'border-brand-500/50 ring-2 ring-brand-500/30' : 'border-gray-200'}`}>
+          <div key={dayIndex} className={`bg-gradient-to-br from-white/60 to-gray-50/60 dark:from-slate-800/60 dark:to-slate-900/50 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-700/80 ${isOpen ? 'border-brand-500/50 ring-2 ring-brand-500/30' : 'border-gray-200'}`}>
             <div
               className="flex items-center p-3 cursor-pointer"
               onClick={() => handleToggleDay(dayIndex)}
@@ -211,55 +216,93 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
     </div>
   );
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'roteiro':
+        return (
+          <>
+            <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700/50 shrink-0">
+                <ProgressBar progress={progress} quote={currentQuote} />
+            </div>
+            <div className="flex-1 overflow-y-auto no-scrollbar">
+                {renderDayList()}
+            </div>
+          </>
+        );
+      case 'mala':
+        return (
+            <div className="flex-1 overflow-y-auto no-scrollbar">
+                <LuggageChecklist />
+            </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
-      <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl text-gray-800 dark:text-gray-200 border border-white/30 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
-        <header className="p-4 sm:p-5 border-b border-white/30 dark:border-gray-700/50 flex justify-between items-center shrink-0">
-          <h1 className="text-lg font-bold tracking-tight flex items-center gap-2 text-gray-900 dark:text-gray-100">
-            <CalendarIcon className="w-6 h-6" /> Roteiro Chile 🇨🇱
+      <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white/60 dark:bg-slate-900/60 backdrop-blur-md text-gray-800 dark:text-gray-200 border border-white/30 dark:border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden">
+        <header className="p-4 sm:p-5 border-b border-white/30 dark:border-gray-700/50 flex flex-col items-center gap-4 shrink-0">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-center text-gray-900 dark:text-gray-100">
+            <span>Roteiro Chile 🇨🇱</span>
           </h1>
-          <div className="flex items-center gap-2 sm:gap-3">
-             <button
-              onClick={handleOpenSantiagoMap}
-              className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 transition-colors"
-              aria-label="Abrir mapa de Santiago"
-              title="Abrir mapa de Santiago"
-            >
-              <MapPinIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-            </button>
+          <div className="w-full flex justify-between items-center">
             <button
-              onClick={() => setIsEmergencyModalOpen(true)}
-              className="p-2 rounded-full bg-red-500/10 hover:bg-red-500/20 transition-colors"
-              aria-label="Contatos de Emergência"
-              title="Contatos de Emergência"
+                onClick={onLogout}
+                className="py-1.5 px-4 bg-white/90 hover:bg-white text-brand-600 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md dark:bg-slate-800 dark:text-gray-200 dark:hover:bg-slate-700"
             >
-              <AlertTriangleIcon className="w-5 h-5 text-red-600 dark:text-red-500" />
+                Sair
             </button>
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label="Toggle dark mode"
-              disabled={isNight}
-              title={isNight ? "Modo escuro ativado automaticamente à noite" : "Alternar modo claro/escuro"}
-            >
-              {isDarkMode ? <SunIcon /> : <MoonIcon />}
-            </button>
-            <button
-              onClick={onLogout}
-              className="py-1.5 px-3 bg-white/90 hover:bg-white text-brand-600 text-xs font-bold rounded-xl transition duration-300 ease-in-out transform hover:-translate-y-0.5 shadow-md"
-            >
-              Sair
-            </button>
+            <div className="flex items-center gap-2 sm:gap-3">
+                <button
+                onClick={handleOpenSantiagoMap}
+                className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 transition-colors"
+                aria-label="Abrir mapa de Santiago"
+                title="Abrir mapa de Santiago"
+                >
+                <MapPinIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                </button>
+                <button
+                onClick={() => setIsEmergencyModalOpen(true)}
+                className="p-2 rounded-full bg-red-500/10 hover:bg-red-500/20 transition-colors"
+                aria-label="Contatos de Emergência"
+                title="Contatos de Emergência"
+                >
+                <AlertTriangleIcon className="w-5 h-5 text-red-600 dark:text-red-500" />
+                </button>
+                <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className="p-2 rounded-full bg-gray-500/10 hover:bg-gray-500/20 dark:bg-white/10 dark:hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Toggle dark mode"
+                disabled={isNight}
+                title={isNight ? "Modo escuro ativado automaticamente à noite" : "Alternar modo claro/escuro"}
+                >
+                {isDarkMode ? <SunIcon /> : <MoonIcon />}
+                </button>
+            </div>
           </div>
         </header>
 
+        <div className="flex border-b border-gray-200 dark:border-gray-700/50 shrink-0">
+            <button
+                onClick={() => setActiveTab('roteiro')}
+                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'roteiro' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/10' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-500/5'}`}
+            >
+                <RoteiroIcon className="w-5 h-5" />
+                Roteiro
+            </button>
+            <button
+                onClick={() => setActiveTab('mala')}
+                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'mala' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/10' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-500/5'}`}
+            >
+                <BriefcaseIcon className="w-5 h-5" />
+                Mala
+            </button>
+        </div>
         
-        <div className="p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700/50 shrink-0">
-            <ProgressBar progress={progress} quote={currentQuote} />
-        </div>
-        <div className="flex-1 overflow-y-auto no-scrollbar">
-            {renderDayList()}
-        </div>
+        {renderContent()}
+
       </main>
       
       <Modal

@@ -55,123 +55,42 @@
           -ms-overflow-style: none;  /* IE and Edge */
           scrollbar-width: none;  /* Firefox */
       }
-      
-      /* Dynamic Background Styles */
-      .dynamic-background {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        z-index: 0;
-      }
-      .bg-image {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        transition: opacity 1.5s ease-in-out;
-      }
-      .bg-day { background: linear-gradient(to bottom, #87CEEB, #d3d3d3); }
-      .bg-sunset { background: linear-gradient(to bottom, #ff7e5f, #feb47b, #ff6a6a); }
-      .bg-night { background: linear-gradient(to bottom, #0f172a, #334155); }
 
-      .weather-overlay {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        transition: opacity 1.5s ease-in-out;
-        opacity: 0;
-      }
-
-      /* Sun Glow */
-      .sun-glow {
-        position: absolute;
-        top: 10%;
-        left: 20%;
-        width: 200px;
-        height: 200px;
-        background: radial-gradient(circle, rgba(255,255,224,0.5) 0%, rgba(255,255,224,0) 70%);
-      }
-
-      /* Clouds */
-      @keyframes moveClouds {
-        0% { transform: translateX(-100%); }
-        100% { transform: translateX(100%); }
-      }
-      .clouds-container { position: absolute; inset: 0; overflow: hidden; }
-      .cloud-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 200%;
-        height: 100%;
-        background-repeat: repeat-x;
-        opacity: 0.5;
-        animation: moveClouds linear infinite;
-      }
-      .layer1 {
-        background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/clouds_01.png');
-        animation-duration: 90s;
-      }
-      .layer2 {
-        background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/clouds_02.png');
-        animation-duration: 60s;
-        opacity: 0.3;
-      }
-
-      /* Stars */
+      /* --- Stars Animation --- */
       @keyframes animStar {
-          from {transform: translateY(0px);}
-          to {transform: translateY(-2000px);}
+        from {
+          transform: translateY(0px);
+        }
+        to {
+          transform: translateY(-2000px);
+        }
       }
-      .stars-container { position: absolute; inset: 0; }
       #stars, #stars2, #stars3 {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        width: 100%;
-        height: 100%;
-        display: block;
-        background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png') repeat top center;
-        z-index: 0;
+        width: 1px;
+        height: 1px;
+        background: transparent;
+        animation-name: animStar;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
       }
-      #stars2 { background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/twinkling.png'); animation: animStar 100s linear infinite; }
-      #stars3 { background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/twinkling.png'); animation: animStar 150s linear infinite; }
-
-      /* Rain */
-      @keyframes rain {
-        0% { transform: translateY(-100%); }
-        100% { transform: translateY(100vh); }
+      #stars {
+        box-shadow: 799px 1210px #FFF, 626px 556px #FFF, 513px 1238px #FFF, 598px 1222px #FFF, 246px 1568px #FFF, 238px 1310px #FFF, 137px 1807px #FFF, 54px 1709px #FFF, 655px 1483px #FFF, 24px 1111px #FFF, 516px 1223px #FFF, 839px 539px #FFF, 153px 174px #FFF, 800px 982px #FFF, 843px 1334px #FFF, 487px 774px #FFF, 73px 1667px #FFF, 428px 1199px #FFF, 846px 1413px #FFF, 321px 1118px #FFF;
+        animation-duration: 50s;
       }
-      .rain-container { position: absolute; inset: 0; overflow: hidden; }
-      .rain-drop {
-        position: absolute;
+      #stars2 {
+        box-shadow: 20px 1056px #FFF, 335px 395px #FFF, 126px 839px #FFF, 508px 849px #FFF, 988px 1229px #FFF, 796px 1108px #FFF, 508px 164px #FFF, 57px 1138px #FFF, 642px 1439px #FFF, 908px 114px #FFF, 477px 62px #FFF, 888px 653px #FFF, 53px 307px #FFF, 519px 748px #FFF, 819px 1152px #FFF, 831px 406px #FFF, 222px 1555px #FFF, 719px 1782px #FFF, 597px 112px #FFF, 731px 1502px #FFF;
+        animation-duration: 100s;
+      }
+      #stars3 {
         width: 2px;
-        height: 20px;
-        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.4));
-        animation: rain linear infinite;
-      }
-      
-      /* Snow */
-      @keyframes fall {
-        0% { transform: translateY(-100%) rotate(0deg); }
-        100% { transform: translateY(100vh) rotate(360deg); }
-      }
-      .snow-container { position: absolute; inset: 0; overflow: hidden; }
-      .snowflake {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background: white;
-        border-radius: 50%;
-        animation: fall linear infinite;
-        pointer-events: none;
+        height: 2px;
+        box-shadow: 43px 1625px #FFF, 937px 1012px #FFF, 999px 118px #FFF, 946px 1757px #FFF, 536px 1162px #FFF, 997px 32px #FFF, 75px 125px #FFF, 701px 155px #FFF, 219px 1634px #FFF, 19px 1391px #FFF, 422px 102px #FFF, 730px 1121px #FFF, 826px 372px #FFF, 250px 106px #FFF, 1000px 1013px #FFF, 506px 1109px #FFF, 580px 1230px #FFF, 594px 926px #FFF, 38px 1090px #FFF, 921px 1300px #FFF;
+        animation-duration: 150s;
       }
     </style>
     <script type="importmap">

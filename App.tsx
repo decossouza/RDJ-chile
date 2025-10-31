@@ -5,7 +5,14 @@ import { MailIcon } from './components/icons/MailIcon';
 import { LockIcon } from './components/icons/LockIcon';
 import { GoogleIcon } from './components/icons/GoogleIcon';
 import { useWeather } from './hooks/useWeather';
-import { DynamicBackground } from './components/DynamicBackground';
+
+const Stars = () => (
+  <div className="absolute inset-0">
+      <div id="stars"></div>
+      <div id="stars2"></div>
+      <div id="stars3"></div>
+  </div>
+);
 
 function App() {
   const [email, setEmail] = useState('');
@@ -13,7 +20,7 @@ function App() {
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const { timeOfDay, weather } = useWeather();
+  const { timeOfDay } = useWeather();
   const isNight = timeOfDay === 'Night';
 
   useEffect(() => {
@@ -38,6 +45,7 @@ function App() {
       element.classList.remove('dark');
     }
     
+    // Only save preference if it's not night, to allow day-time toggling
     if (!isNight) {
         try {
             localStorage.setItem('santiagoDarkMode', JSON.stringify(isDarkMode));
@@ -77,7 +85,7 @@ function App() {
     }
 
     return (
-      <main className="relative z-10 w-full max-w-md bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-2xl p-6 space-y-5 border border-white/30 dark:border-slate-700/50">
+      <main className="relative z-10 w-full max-w-md bg-white/50 dark:bg-slate-900/50 backdrop-blur-md rounded-2xl shadow-2xl p-6 space-y-5 border border-white/30 dark:border-slate-700/50">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight">RDJ</h1>
           <h2 className="mt-2 text-xl font-semibold text-gray-800 dark:text-gray-200">Bem-vindo(a) de volta!</h2>
@@ -131,7 +139,7 @@ function App() {
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
-          <div className="relative bg-white/60 dark:bg-slate-900/60 px-2 text-xs text-gray-500 dark:text-gray-400">ou</div>
+          <div className="relative bg-white/50 dark:bg-slate-900/50 px-2 text-xs text-gray-500 dark:text-gray-400">ou</div>
         </div>
 
         <button
@@ -154,8 +162,26 @@ function App() {
   
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4 font-sans relative overflow-hidden">
-        <DynamicBackground timeOfDay={timeOfDay} weather={weather} />
-        {renderContent()}
+      <div className="absolute inset-0 -z-10">
+        {/* Day */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-sky-400 to-sky-200 transition-opacity duration-[1500ms] ease-in-out"
+          style={{ opacity: timeOfDay === 'Day' ? 1 : 0 }}
+        />
+        {/* Sunset */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-indigo-700 via-purple-500 to-orange-400 transition-opacity duration-[1500ms] ease-in-out"
+          style={{ opacity: timeOfDay === 'Sunset' ? 1 : 0 }}
+        />
+        {/* Night */}
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-gray-900 to-slate-800 transition-opacity duration-[1500ms] ease-in-out"
+          style={{ opacity: timeOfDay === 'Night' ? 1 : 0 }}
+        >
+          <Stars />
+        </div>
+      </div>
+      {renderContent()}
     </div>
   );
 }
