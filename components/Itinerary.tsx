@@ -14,6 +14,10 @@ import { ChevronDownIcon } from './icons/ChevronDownIcon';
 import { RoteiroIcon } from './icons/RoteiroIcon';
 import { BriefcaseIcon } from './icons/BriefcaseIcon';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
+import { FlightIcon } from './icons/FlightIcon';
+import { FlightReminders } from './FlightReminders';
+import { useFlightReminders } from '../hooks/useFlightReminders';
+
 
 interface ItineraryProps {
   onLogout: () => void;
@@ -22,7 +26,7 @@ interface ItineraryProps {
   isNight: boolean;
 }
 
-type ActiveTab = 'roteiro' | 'mala';
+type ActiveTab = 'roteiro' | 'mala' | 'voos';
 
 interface Link {
   uri: string;
@@ -51,6 +55,43 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
     content: { text: '', links: [] },
     error: ''
   });
+  
+  const { reminders, setNotified } = useFlightReminders();
+
+  // Notification checking logic
+  useEffect(() => {
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') {
+      return; // Don't run if notifications are not supported or permission is not granted
+    }
+
+    const checkReminders = () => {
+      const now = new Date().getTime();
+      reminders.forEach(reminder => {
+        if (reminder.notified) return;
+
+        const flightTime = new Date(reminder.dateTime).getTime();
+        const reminderTime = flightTime - (reminder.reminderMinutes * 60 * 1000);
+
+        // Notify if reminder time is in the past, but flight is in the future
+        if (now >= reminderTime && now < flightTime) {
+          const title = reminder.type === 'departure' ? `Lembrete de Saída: Voo ${reminder.flightNumber}` : `Lembrete de Chegada: Voo ${reminder.flightNumber}`;
+          const body = `Seu voo está programado para ${new Date(reminder.dateTime).toLocaleTimeString('pt-BR', {timeStyle: 'short'})}.`;
+          
+          new Notification(title, {
+            body: body,
+            icon: '/vite.svg' // Using the default app icon
+          });
+
+          setNotified(reminder.id);
+        }
+      });
+    };
+
+    const intervalId = setInterval(checkReminders, 60000); // Check every minute
+
+    return () => clearInterval(intervalId);
+  }, [reminders, setNotified]);
+
 
   useEffect(() => {
     try {
@@ -235,6 +276,12 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
                 <LuggageChecklist />
             </div>
         );
+      case 'voos':
+        return (
+            <div className="flex-1 overflow-y-auto no-scrollbar bg-slate-50 dark:bg-slate-900/50">
+                <FlightReminders />
+            </div>
+        );
       default:
         return null;
     }
@@ -306,6 +353,13 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
             >
                 <BriefcaseIcon className="w-5 h-5" />
                 Mala
+            </button>
+             <button
+                onClick={() => setActiveTab('voos')}
+                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'voos' ? 'text-secondary-500 dark:text-secondary-400 border-b-2 border-secondary-400 bg-secondary-500/10' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
+            >
+                <FlightIcon className="w-5 h-5" />
+                Voos
             </button>
         </div>
         
