@@ -6,23 +6,16 @@ import { MailIcon } from './components/icons/MailIcon';
 import { LockIcon } from './components/icons/LockIcon';
 import { GoogleIcon } from './components/icons/GoogleIcon';
 import { useWeather } from './hooks/useWeather';
-
-const Stars = () => (
-  <div className="absolute inset-0">
-      <div id="stars"></div>
-      <div id="stars2"></div>
-      <div id="stars3"></div>
-  </div>
-);
+import { DynamicBackground } from './components/DynamicBackground';
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // FIX: Added missing '=' for useState hook. This was causing a cascade of parsing errors on preceding lines.
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const { timeOfDay } = useWeather();
+  const [rememberMe, setRememberMe] = useState(false);
+  const { timeOfDay, weather } = useWeather();
   const isNight = timeOfDay === 'Night';
 
   useEffect(() => {
@@ -74,108 +67,108 @@ function App() {
     setPassword('');
   };
   
-  const renderContent = () => {
-    if (isLoggedIn) {
-      return (
-        <Itinerary 
-          onLogout={handleLogout} 
-          isDarkMode={isDarkMode} 
-          setIsDarkMode={setIsDarkMode} 
-          isNight={isNight} 
-        />
-      );
-    }
-
+  const renderLoginScreen = () => {
     return (
-      <main className="relative z-10 w-full max-w-md bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-8 space-y-6 border border-slate-200 dark:border-slate-700">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">RDJ no Chile</h1>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Acesse sua conta para ver os detalhes da viagem.</p>
+      <div className="relative z-10 grid w-full min-h-screen grid-cols-1 md:grid-cols-2">
+        <div className="flex-col items-start justify-center hidden p-12 md:flex">
+          <div className="max-w-md">
+            <h1 className="text-5xl font-extrabold tracking-tight text-white lg:text-6xl">
+              RDJ NO CHILE
+            </h1>
+            <p className="mt-4 text-lg text-slate-300">
+              Entre na sua conta para continuar a planejar sua aventura no Chile.
+            </p>
+          </div>
         </div>
 
-        <form className="space-y-6" onSubmit={handleLogin}>
-          <AuthInput
-            id="email"
-            label="Usuário"
-            type="text"
-            placeholder="Seu usuário"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon={<MailIcon />}
-          />
+        <div className="flex items-center justify-center w-full min-h-screen p-4 sm:p-8">
+            <main className="w-full max-w-md bg-black/10 rounded-2xl p-8 space-y-6 border border-white/20">
+              <div className="text-center md:hidden">
+                  <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">RDJ NO CHILE</h1>
+                  <p className="mt-2 text-base text-slate-300">Entre na sua conta.</p>
+              </div>
 
-          <div>
-             <div className="flex justify-between items-baseline">
-                <label htmlFor="password" className="block text-sm font-medium text-slate-800 dark:text-slate-300">
-                    Senha
-                </label>
-                <a href="#" className="text-xs text-brand-600 hover:text-brand-500 dark:text-brand-400 dark:hover:text-brand-300 font-medium">
-                    Esqueceu a senha?
-                </a>
-             </div>
-             <div className="mt-1">
+              <form className="space-y-6" onSubmit={handleLogin}>
+                <AuthInput
+                  id="email"
+                  label="Usuário"
+                  type="text"
+                  placeholder="Seu usuário"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  icon={<MailIcon />}
+                />
+
                 <AuthInput
                     id="password"
+                    label="Senha"
                     type="password"
                     placeholder="Sua senha"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     icon={<LockIcon />}
-                    label="" // Pass empty label as it's handled above
                 />
-             </div>
-          </div>
-          
-          {error && <p className="text-xs text-red-600 text-center font-medium">{error}</p>}
+                
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="remember-me"
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="h-4 w-4 rounded border-slate-500 text-primary-500 focus:ring-primary-500 bg-transparent"
+                    />
+                    <label htmlFor="remember-me" className="font-medium text-slate-300">
+                      Lembrar-me
+                    </label>
+                  </div>
+                  <a href="#" className="font-medium text-primary-400 hover:text-primary-300">
+                      Esqueceu a senha?
+                  </a>
+                </div>
+                
+                {error && <p className="text-xs text-red-500 text-center font-medium">{error}</p>}
 
-          <button
-            type="submit"
-            className="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white text-sm font-bold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:focus:ring-offset-slate-800 shadow-lg shadow-brand-500/30 hover:-translate-y-0.5"
-          >
-            Entrar
-          </button>
-        </form>
+                <button
+                  type="submit"
+                  className="w-full py-3 px-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white text-sm font-bold rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-slate-900 shadow-lg shadow-primary-500/40 hover:-translate-y-0.5 glow-shadow-primary"
+                >
+                  Entrar
+                </button>
+              </form>
 
-        <div className="relative flex items-center justify-center">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-300 dark:border-slate-600"></div>
-          </div>
-          <div className="relative bg-white dark:bg-slate-800 px-2 text-xs text-slate-500 dark:text-slate-400">ou</div>
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-slate-600"></div>
+                </div>
+                <div className="relative bg-black/20 backdrop-blur-sm px-2 text-xs text-slate-400">ou entre com</div>
+              </div>
+
+              <button
+                type="button"
+                className="w-full flex items-center justify-center py-2.5 px-4 bg-white/20 border border-white/30 text-white text-sm font-semibold rounded-xl hover:bg-white/30 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-offset-slate-900"
+              >
+                <GoogleIcon className="mr-3" />
+                Entrar com Google
+              </button>
+          </main>
         </div>
-
-        <button
-          type="button"
-          className="w-full flex items-center justify-center py-2.5 px-4 bg-slate-50 dark:bg-slate-700/60 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-semibold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 dark:focus:ring-offset-slate-800"
-        >
-          <GoogleIcon className="mr-3" />
-          Entrar com Google
-        </button>
-      </main>
+      </div>
     );
   };
   
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 font-sans relative overflow-hidden bg-slate-100 dark:bg-slate-900">
-      <div className="absolute inset-0 z-0">
-        {/* Day */}
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-sky-200 to-slate-50 transition-opacity duration-[1500ms] ease-in-out"
-          style={{ opacity: timeOfDay === 'Day' ? 1 : 0 }}
-        />
-        {/* Sunset */}
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-yellow-200 via-orange-300 to-pink-300 transition-opacity duration-[1500ms] ease-in-out"
-          style={{ opacity: timeOfDay === 'Sunset' ? 1 : 0 }}
-        />
-        {/* Night */}
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800 transition-opacity duration-[1500ms] ease-in-out"
-          style={{ opacity: timeOfDay === 'Night' ? 1 : 0 }}
-        >
-          <Stars />
-        </div>
-      </div>
-      {renderContent()}
+    <div className="relative min-h-screen w-full font-sans text-white">
+      {!isLoggedIn && <DynamicBackground timeOfDay={timeOfDay} weather={weather} />}
+      {isLoggedIn 
+        ? <Itinerary 
+            onLogout={handleLogout} 
+            isDarkMode={isDarkMode} 
+            setIsDarkMode={setIsDarkMode} 
+            isNight={isNight} 
+          />
+        : renderLoginScreen()
+      }
     </div>
   );
 }

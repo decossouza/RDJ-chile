@@ -70,7 +70,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({ dayData, isDarkMode 
             map: mapInstance.current,
             suppressMarkers: true,
             polylineOptions: {
-                strokeColor: isDarkMode ? '#38bdf8' : '#0284c7',
+                strokeColor: isDarkMode ? '#2dd4bf' : '#db2777',
                 strokeOpacity: 0.8,
                 strokeWeight: 6,
             },
@@ -113,7 +113,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({ dayData, isDarkMode 
       
       locations.forEach((loc, index) => {
           const pin = document.createElement('div');
-          pin.className = 'w-8 h-8 rounded-full bg-brand-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white font-bold text-sm shadow-lg';
+          pin.className = 'w-8 h-8 rounded-full bg-primary-500 border-2 border-white dark:border-slate-900 flex items-center justify-center text-white font-bold text-sm shadow-lg';
           pin.textContent = String(index + 1);
 
           const marker = new AdvancedMarkerElement({

@@ -7,7 +7,7 @@
     <title>RDJ no Chile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -18,31 +18,31 @@
               sans: ['Inter', 'sans-serif'],
             },
             colors: {
-              brand: {
-                '50': '#f0f9ff',
-                '100': '#e0f2fe',
-                '200': '#bae6fd',
-                '300': '#7dd3fc',
-                '400': '#38bdf8',
-                '500': '#0ea5e9',
-                '600': '#0284c7',
-                '700': '#0369a1',
-                '800': '#075985',
-                '900': '#0c4a6e',
-                '950': '#082f49'
+              primary: {
+                '50': '#fdf2f8',
+                '100': '#fce7f3',
+                '200': '#fbcfe8',
+                '300': '#f9a8d4',
+                '400': '#f472b6',
+                '500': '#ec4899',
+                '600': '#db2777',
+                '700': '#be185d',
+                '800': '#9d174d',
+                '900': '#831843',
+                '950': '#500724'
               },
-              accent: {
-                '50': '#fefce8',
-                '100': '#fef9c3',
-                '200': '#fef08a',
-                '300': '#fde047',
-                '400': '#facc15',
-                '500': '#eab308',
-                '600': '#ca8a04',
-                '700': '#a16207',
-                '800': '#854d0e',
-                '900': '#713f12',
-                '950': '#422006'
+              secondary: {
+                '50': '#f0fdfa',
+                '100': '#ccfbf1',
+                '200': '#99f6e4',
+                '300': '#5eead4',
+                '400': '#2dd4bf',
+                '500': '#14b8a6',
+                '600': '#0d9488',
+                '700': '#0f766e',
+                '800': '#115e59',
+                '900': '#134e4a',
+                '950': '#042f2e'
               }
             }
           }
@@ -69,41 +69,73 @@
           scrollbar-width: none;  /* Firefox */
       }
 
-      /* --- Stars Animation --- */
-      @keyframes animStar {
-        from {
-          transform: translateY(0px);
-        }
-        to {
-          transform: translateY(-2000px);
-        }
+      /* --- Glow Effects --- */
+      .glow-shadow-primary {
+          box-shadow: 0 0 15px theme('colors.primary.500 / 0.5'), 0 0 5px theme('colors.primary.500 / 0.4');
       }
-      #stars, #stars2, #stars3 {
+      .glow-text-secondary {
+          text-shadow: 0 0 8px theme('colors.secondary.400 / 0.8');
+      }
+
+      .pulsing-glow {
+          animation: pulse-glow 2.5s infinite ease-in-out;
+      }
+
+      @keyframes pulse-glow {
+          0%, 100% {
+              box-shadow: 0 0 8px theme('colors.secondary.400 / 0.2');
+          }
+          50% {
+              box-shadow: 0 0 20px theme('colors.secondary.400 / 0.5');
+          }
+      }
+      
+      /* --- Dynamic Background --- */
+      .dynamic-background {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 1px;
-        height: 1px;
-        background: transparent;
-        animation-name: animStar;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
+        inset: 0;
+        z-index: -10;
+        overflow: hidden;
       }
-      #stars {
-        box-shadow: 799px 1210px #FFF, 626px 556px #FFF, 513px 1238px #FFF, 598px 1222px #FFF, 246px 1568px #FFF, 238px 1310px #FFF, 137px 1807px #FFF, 54px 1709px #FFF, 655px 1483px #FFF, 24px 1111px #FFF, 516px 1223px #FFF, 839px 539px #FFF, 153px 174px #FFF, 800px 982px #FFF, 843px 1334px #FFF, 487px 774px #FFF, 73px 1667px #FFF, 428px 1199px #FFF, 846px 1413px #FFF, 321px 1118px #FFF;
-        animation-duration: 50s;
+      .bg-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        transition: opacity 1.5s ease-in-out;
       }
-      #stars2 {
-        box-shadow: 20px 1056px #FFF, 335px 395px #FFF, 126px 839px #FFF, 508px 849px #FFF, 988px 1229px #FFF, 796px 1108px #FFF, 508px 164px #FFF, 57px 1138px #FFF, 642px 1439px #FFF, 908px 114px #FFF, 477px 62px #FFF, 888px 653px #FFF, 53px 307px #FFF, 519px 748px #FFF, 819px 1152px #FFF, 831px 406px #FFF, 222px 1555px #FFF, 719px 1782px #FFF, 597px 112px #FFF, 731px 1502px #FFF;
-        animation-duration: 100s;
+      .bg-image::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transition: background-color 1.5s ease-in-out, background 1.5s ease-in-out;
       }
-      #stars3 {
-        width: 2px;
-        height: 2px;
-        box-shadow: 43px 1625px #FFF, 937px 1012px #FFF, 999px 118px #FFF, 946px 1757px #FFF, 536px 1162px #FFF, 997px 32px #FFF, 75px 125px #FFF, 701px 155px #FFF, 219px 1634px #FFF, 19px 1391px #FFF, 422px 102px #FFF, 730px 1121px #FFF, 826px 372px #FFF, 250px 106px #FFF, 1000px 1013px #FFF, 506px 1109px #FFF, 580px 1230px #FFF, 594px 926px #FFF, 38px 1090px #FFF, 921px 1300px #FFF;
-        animation-duration: 150s;
+
+      .bg-day {
+        background-image: url('https://images.unsplash.com/photo-1580086896892-d29eedc4832f?auto=format&fit=crop&q=80&w=2070');
+      }
+      .bg-day::after {
+        background-color: rgba(20, 20, 40, 0.4);
+      }
+
+      .bg-sunset {
+         background-image: url('https://images.unsplash.com/photo-1580086896892-d29eedc4832f?auto=format&fit=crop&q=80&w=2070');
+         filter: sepia(0.3) hue-rotate(-20deg) saturate(1.2);
+      }
+      .bg-sunset::after {
+        background: linear-gradient(to top, rgba(115, 60, 98, 0.5), rgba(248, 152, 96, 0.3));
+      }
+      
+      .bg-night {
+        background-image: url('https://images.unsplash.com/photo-1580086896892-d29eedc4832f?auto=format&fit=crop&q=80&w=2070');
+        filter: brightness(0.6) saturate(0.8);
+      }
+      .bg-night::after {
+        background: linear-gradient(to top, rgba(10, 20, 40, 0.7), rgba(20, 10, 30, 0.5));
       }
     </style>
     <script type="importmap">

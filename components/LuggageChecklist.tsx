@@ -66,7 +66,7 @@ export const LuggageChecklist: React.FC = () => {
                     <div className="px-4 pb-4">
                         {category.subcategories.map((sub, subCategoryIndex) => (
                             <div key={subCategoryIndex} className="pt-3 border-t border-slate-200 dark:border-slate-700/50 first:border-t-0 first:pt-0">
-                                <h3 className="font-semibold text-sm text-brand-700 dark:text-brand-400 mb-2">{sub.title}</h3>
+                                <h3 className="font-semibold text-sm text-primary-700 dark:text-primary-400 mb-2">{sub.title}</h3>
                                 <ul className="space-y-1">
                                     {sub.items.map((item, itemIndex) => {
                                         const key = `${categoryIndex}-${subCategoryIndex}-${itemIndex}`;

@@ -159,7 +159,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         const isOpen = openDayIndex === dayIndex;
         const DayIcon = day.icon;
         return (
-          <div key={dayIndex} className={`bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-200/80 dark:border-slate-700/80 ${isOpen ? 'ring-2 ring-brand-500/50' : ''}`}>
+          <div key={dayIndex} className={`bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden transition-all duration-300 border dark:border-slate-200/80 dark:border-slate-700/80 ${isOpen ? 'ring-2 ring-primary-500/50' : ''}`}>
             <div
               className="flex items-center p-4 cursor-pointer"
               onClick={() => handleToggleDay(dayIndex)}
@@ -167,12 +167,12 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
               aria-controls={`day-${dayIndex}-content`}
               role="button"
             >
-              <div className="mr-4 p-3 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg shadow-lg shadow-brand-500/30">
+              <div className="mr-4 p-3 bg-gradient-to-br from-primary-500 to-secondary-400 rounded-lg shadow-lg shadow-primary-500/30">
                   <DayIcon className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
                   <h2 className="font-bold text-base text-slate-900 dark:text-slate-100">{`${day.day} – ${day.date}`}</h2>
-                  <h3 className="font-semibold text-sm text-brand-700 dark:text-brand-400">{day.title}</h3>
+                  <h3 className="font-semibold text-sm text-primary-700 dark:text-primary-400">{day.title}</h3>
               </div>
               <ChevronDownIcon className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
             </div>
@@ -189,7 +189,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
                     return (
                       <li
                         key={eventIndex}
-                        className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-300 group ${isChecked ? 'bg-brand-50 text-slate-500 line-through dark:bg-brand-950/50 dark:text-slate-500' : 'hover:bg-slate-100 dark:hover:bg-slate-700/50'}`}
+                        className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-300 group ${isChecked ? 'bg-secondary-50 text-slate-500 line-through dark:bg-secondary-950/30 dark:text-slate-500' : 'hover:bg-slate-100 dark:hover:bg-slate-700/50'}`}
                         onClick={() => handleCheckItem(dayIndex, eventIndex)}
                       >
                         <div>{isChecked ? <CheckCircleIcon /> : <EmptyCircleIcon />}</div>
@@ -242,12 +242,13 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
 
   return (
     <>
-      <main className="relative z-10 w-full max-w-5xl h-[95vh] flex flex-col bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl overflow-hidden">
+      <main className="w-full h-screen flex flex-col bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200">
         <header className="relative border-b border-slate-200 dark:border-slate-700 shrink-0">
             <div 
-                className="absolute inset-0 bg-gradient-to-br from-brand-600 to-sky-700"
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1557974040-3bec341da09b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170')" }}
             >
-                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute inset-0 bg-black/40" />
             </div>
             <div className="relative p-4 sm:p-5 flex flex-col items-center gap-4">
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-center text-white drop-shadow-md">
@@ -294,14 +295,14 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         <div className="flex border-b border-slate-200 dark:border-slate-700 shrink-0">
             <button
                 onClick={() => setActiveTab('roteiro')}
-                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'roteiro' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/5' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
+                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'roteiro' ? 'text-secondary-500 dark:text-secondary-400 border-b-2 border-secondary-400 bg-secondary-500/10' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
             >
                 <RoteiroIcon className="w-5 h-5" />
                 Roteiro
             </button>
             <button
                 onClick={() => setActiveTab('mala')}
-                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'mala' ? 'text-brand-600 dark:text-brand-400 border-b-2 border-brand-500 bg-brand-500/5' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
+                className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'mala' ? 'text-secondary-500 dark:text-secondary-400 border-b-2 border-secondary-400 bg-secondary-500/10' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
             >
                 <BriefcaseIcon className="w-5 h-5" />
                 Mala
@@ -325,18 +326,18 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         title="Contatos de Emergência"
       >
         <div className="space-y-2 text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
-            <p><strong>Polícia (Carabineros):</strong> <a href="tel:133" className="text-brand-600 dark:text-brand-400 hover:underline">133</a></p>
-            <p><strong>Ambulância (SAMU):</strong> <a href="tel:131" className="text-brand-600 dark:text-brand-400 hover:underline">131</a></p>
-            <p><strong>Bombeiros:</strong> <a href="tel:132" className="text-brand-600 dark:text-brand-400 hover:underline">132</a></p>
+            <p><strong>Polícia (Carabineros):</strong> <a href="tel:133" className="text-primary-600 dark:text-primary-400 hover:underline">133</a></p>
+            <p><strong>Ambulância (SAMU):</strong> <a href="tel:131" className="text-primary-600 dark:text-primary-400 hover:underline">131</a></p>
+            <p><strong>Bombeiros:</strong> <a href="tel:132" className="text-primary-600 dark:text-primary-400 hover:underline">132</a></p>
             
             <div className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-700/50">
               <h4 className="font-semibold mb-2 text-slate-800 dark:text-slate-200">Consulado-Geral do Brasil em Santiago</h4>
               <p><strong>Endereço:</strong> Los Militares 6191, Térreo, Las Condes, Santiago</p>
-              <p><strong>Telefone (horário comercial):</strong> <a href="tel:+56228205800" className="text-brand-600 dark:text-brand-400 hover:underline">+56 2 2820-5800</a></p>
+              <p><strong>Telefone (horário comercial):</strong> <a href="tel:+56228205800" className="text-primary-600 dark:text-primary-400 hover:underline">+56 2 2820-5800</a></p>
               <div className="mt-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-500/30">
                 <p>
                   <strong className="text-red-600 dark:text-red-400">Telefone de Plantão (EMERGÊNCIAS):</strong><br/>
-                  <a href="tel:+56993345103" className="text-brand-600 dark:text-brand-400 hover:underline font-semibold">+56 9 9334-5103</a>
+                  <a href="tel:+56993345103" className="text-primary-600 dark:text-primary-400 hover:underline font-semibold">+56 9 9334-5103</a>
                 </p>
                 <span className="text-xs block text-slate-500 dark:text-slate-400 mt-1">Somente para emergências graves com cidadãos brasileiros (acidentes, mortes, prisões).</span>
               </div>

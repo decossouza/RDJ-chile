@@ -49,7 +49,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title = "Informa√
             <>
               {isLoading && (
                 <div className="flex justify-center items-center flex-col gap-4 py-8">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary-400"></div>
                   <p className="text-slate-600 dark:text-slate-400">Buscando informa√ß√µes...</p>
                 </div>
               )}
@@ -63,7 +63,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title = "Informa√
                       <ul className="list-disc list-inside space-y-2">
                         {content.links.map((link, index) => (
                           <li key={index}>
-                            <a href={link.uri} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
+                            <a href={link.uri} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">
                               {link.title}
                             </a>
                           </li>
