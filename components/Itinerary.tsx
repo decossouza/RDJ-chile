@@ -20,7 +20,7 @@ import { FlightTracker } from './FlightTracker';
 import { useFlightReminders } from '../hooks/useFlightReminders';
 import { Assistant } from './Assistant';
 import { SparklesIcon } from './icons/SparklesIcon';
-import { CurrencyIcon } from './icons/CurrencyIcon';
+import { DollarSignIcon } from './icons/DollarSignIcon';
 import { CurrencyConverter } from './CurrencyConverter';
 
 
@@ -378,7 +378,7 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
                 onClick={() => setActiveTab('cambio')}
                 className={`flex-1 flex justify-center items-center gap-2 p-3 text-sm font-semibold transition-colors ${activeTab === 'cambio' ? 'text-secondary-500 dark:text-secondary-400 border-b-2 border-secondary-400 bg-secondary-500/10' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-500/5'}`}
             >
-                <CurrencyIcon className="w-5 h-5" />
+                <DollarSignIcon className="w-5 h-5" />
                 Câmbio
             </button>
         </div>

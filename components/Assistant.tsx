@@ -128,7 +128,7 @@ export const Assistant: React.FC<AssistantProps> = ({ isOpen, onClose }) => {
                             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                             placeholder="Pergunte algo sobre a viagem..."
                             disabled={isLoading}
-                            className="w-full p-2 bg-gray-100 dark:bg-slate-700 rounded-md border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-secondary-400 outline-none text-sm"
+                            className="w-full p-2 bg-gray-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 rounded-md border border-gray-300 dark:border-slate-600 focus:ring-2 focus:ring-secondary-400 outline-none text-sm"
                         />
                         <button onClick={handleSendMessage} disabled={isLoading || !userInput.trim()} className="p-2.5 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg hover:from-primary-600 hover:to-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity flex-shrink-0">
                             <SendIcon />
