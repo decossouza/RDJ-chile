@@ -16,10 +16,7 @@ import { BriefcaseIcon } from './icons/BriefcaseIcon';
 import { AlertTriangleIcon } from './icons/AlertTriangleIcon';
 import { FlightIcon } from './icons/FlightIcon';
 import { FlightReminders } from './FlightReminders';
-import { FlightTracker } from './FlightTracker';
 import { useFlightReminders } from '../hooks/useFlightReminders';
-import { Assistant } from './Assistant';
-import { SparklesIcon } from './icons/SparklesIcon';
 import { DollarSignIcon } from './icons/DollarSignIcon';
 import { CurrencyConverter } from './CurrencyConverter';
 
@@ -53,7 +50,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
   const [openDayIndex, setOpenDayIndex] = useState<number | null>(0);
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('roteiro');
-  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
@@ -285,7 +281,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
       case 'voos':
         return (
             <div className="flex-1 overflow-y-auto no-scrollbar bg-slate-50 dark:bg-slate-900/50">
-                <FlightTracker />
                 <FlightReminders />
             </div>
         );
@@ -386,17 +381,6 @@ export const Itinerary: React.FC<ItineraryProps> = ({ onLogout, isDarkMode, setI
         {renderContent()}
 
       </main>
-
-      <button
-        onClick={() => setIsAssistantOpen(true)}
-        className="fixed bottom-6 right-6 z-40 w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 text-white rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out flex items-center justify-center pulsing-glow"
-        aria-label="Abrir Assistente de Viagem"
-        title="Assistente de Viagem"
-      >
-        <SparklesIcon className="w-8 h-8" />
-      </button>
-
-      <Assistant isOpen={isAssistantOpen} onClose={() => setIsAssistantOpen(false)} />
       
       <Modal
         isOpen={modalState.isOpen}
